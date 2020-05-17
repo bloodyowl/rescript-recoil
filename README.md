@@ -118,3 +118,15 @@ let {Recoil.reset: reset} = Recoil.useResetRecoilState(textState);
 
 reset(); // write
 ```
+
+## Examples
+
+The [Recoil Basic Tutorial](https://recoiljs.org/docs/basic-tutorial/intro) has been made in ReasonReact: [check the source](./examples/TodoList.re)!
+
+You can run it using:
+
+```console
+$ yarn examples
+```
+
+and going to [http://localhost:8000/TodoList.html](http://localhost:8000/TodoList.html)

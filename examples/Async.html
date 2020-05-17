@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <title>ReasonRecoil: Async example</title>
+  <style>
+    html {
+      font-family: sans-serif;
+      background-color: #efefef;
+    }
+
+    body {
+      margin: 10px auto;
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 400px;
+    }
+  </style>
+  <div id="root"></div>
+  <script>
+    window.process = {
+      env: {
+        NODE_ENV: "development",
+      },
+    };
+  </script>
+  <script src="/moduleserve/load.js" data-module="/Async.bs.js"></script>
+</html>

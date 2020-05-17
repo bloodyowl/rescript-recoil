@@ -6,7 +6,8 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "test": "jest",
-    "format": "find ./src -iname '*.re' | xargs bsrefmt --in-place && find ./src -iname '*.rei' | xargs bsrefmt -i true --in-place && find ./test -iname '*.re' | xargs bsrefmt --in-place"
+    "format": "find ./src -iname '*.re' | xargs bsrefmt --in-place && find ./src -iname '*.rei' | xargs bsrefmt -i true --in-place && find ./test -iname '*.re' | xargs bsrefmt --in-place",
+    "examples": "moduleserve ./examples --port 8000"
   },
   "keywords": [
     "BuckleScript",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "bs-platform": "^7.3.1",
     "jest": "^26.0.1",
+    "moduleserve": "^0.9.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "reason-react": "git://github.com/reasonml/reason-react.git#a70d9e6b51ed0ab27a895fa13807436d20db5620",
