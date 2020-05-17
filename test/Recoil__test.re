@@ -207,3 +207,121 @@ describe(
     expect.bool(atomValue->Option.isSome).toBeTrue();
   });
 });
+
+let username = Recoil.atom({key: "Test.Username", default: ""});
+let usernameSize =
+  Recoil.selector({
+    key: "Test.UsernameSize",
+    get: ({get}) => {
+      let username = get(username);
+      username->Js.String.length;
+    },
+    set:
+      Some(
+        ({set, get}, newValue) => {
+          set(
+            username,
+            get(username)->Js.String.slice(~from=0, ~to_=newValue),
+          )
+        },
+      ),
+  });
+
+module UseRecoilStateComponentWithSelector = {
+  [@react.component]
+  let make = () => {
+    let (username, setUsername) = Recoil.useRecoilState(username);
+    let (usernameSize, setUsernameSize) =
+      Recoil.useRecoilState(usernameSize);
+
+    <div>
+      <input
+        onChange={event => {
+          let newValue = event->ReactEvent.Form.target##value;
+          setUsername(_ => newValue);
+        }}
+        value=username
+      />
+      <strong> usernameSize->React.int </strong>
+      <button onClick={_ => setUsernameSize(_ => 1)}>
+        "Slice to 1"->React.string
+      </button>
+    </div>;
+  };
+};
+
+external domElementToJsT: Dom.element => Js.t({..}) = "%identity";
+
+// The following test outputs a warning, but that doesn't look like
+// to be related to our bindings: https://github.com/facebookexperimental/Recoil/issues/31
+describe(
+  "Recoil.useRecoilState with selector", ({test, beforeEach, afterEach}) => {
+  let container = ref(None);
+
+  beforeEach(prepareContainer(container));
+  afterEach(cleanupContainer(container));
+
+  test("Can read and set value", ({expect}) => {
+    let container = getContainer(container);
+
+    act(() => {
+      ReactDOMRe.render(
+        <Recoil.RecoilRoot>
+          <UseRecoilStateComponentWithSelector />
+        </Recoil.RecoilRoot>,
+        container,
+      )
+    });
+
+    let selectorValue =
+      container->DOM.findBySelectorAndTextContent("strong", "0");
+
+    expect.bool(selectorValue->Option.isSome).toBeTrue();
+
+    let input = container->DOM.findBySelector("input");
+
+    act(() => {
+      switch (input) {
+      | Some(input) => input->Simulate.changeWithValue("bloodyowl")
+      | None => ()
+      }
+    });
+
+    let oldSelectorValue =
+      container->DOM.findBySelectorAndTextContent("strong", "0");
+
+    expect.bool(oldSelectorValue->Option.isSome).toBeFalse();
+
+    let selectorValue =
+      container->DOM.findBySelectorAndTextContent("strong", "9");
+
+    expect.bool(selectorValue->Option.isSome).toBeTrue();
+
+    let button =
+      container->DOM.findBySelectorAndTextContent("button", "Slice to 1");
+
+    act(() => {
+      switch (button) {
+      | Some(button) => Simulate.click(button)
+      | None => ()
+      }
+    });
+
+    let oldSelectorValue =
+      container->DOM.findBySelectorAndTextContent("strong", "9");
+
+    expect.bool(oldSelectorValue->Option.isSome).toBeFalse();
+
+    let selectorValue =
+      container->DOM.findBySelectorAndTextContent("strong", "1");
+
+    expect.bool(selectorValue->Option.isSome).toBeTrue();
+
+    let input = container->DOM.findBySelector("input");
+
+    expect.value(input->Option.map(item => item->domElementToJsT##value)).
+      toEqual(
+      Some("b"),
+    );
+  });
+});

@@ -1,14 +1,14 @@
 type getter = {get: 'a. Recoil__Value.t('a) => 'a};
 
-type setter('a) = {
+type getterAndSetter = {
   get: 'a. Recoil__Value.t('a) => 'a,
-  set: 'a => unit,
+  set: 'a. (Recoil__Value.t('a), 'a) => unit,
 };
 
 type selectorConfig('a) = {
   key: string,
   get: getter => 'a,
-  set: 'b. option((setter('a), 'b) => unit),
+  set: option((getterAndSetter, 'a) => unit),
 };
 
 [@bs.module "recoil"]
