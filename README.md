@@ -124,3 +124,63 @@ $ yarn examples
 ```
 
 and going to [http://localhost:8000/TodoList.html](http://localhost:8000/TodoList.html)
+
+### Memoization
+
+In the [Recoil introduction video](https://www.youtube.com/watch?v=_ISAA_Jt9kI&feature=emb_title), it is recommanded to use memoization in order to be able to create atoms on the fly, here's a recipe using [Belt](https://reasonml.org/apis/javascript/latest/belt):
+
+```reason
+open Belt;
+
+let memoizeByString = f => {
+  // Create the map where we'll store the values
+  let map = MutableMap.String.make();
+  // Return a function that takes a string and returns a value
+  // from the cache or the function
+  id => {
+    switch (map->MutableMap.String.get(id)) {
+    | Some(value) => value
+    | None =>
+      let value = f(id);
+      map->MutableMap.String.set(id, value);
+      value;
+    };
+  };
+};
+```
+
+Then, you can create a function that gets or creates the right atom:
+
+```reason
+type t = {
+  id: string,
+  value: string,
+  isCompleted: bool,
+};
+
+let todoItemById =
+  memoizeByString(id => {
+    Recoil.atom({
+      key: {j|todo.$id|j},
+      default: {
+        id,
+        value: "",
+        isCompleted: false,
+      },
+    })
+  });
+```
+
+And use it within a React component:
+
+```reason
+[@react.component]
+let make = (~todoId) => {
+  let (todo, setTodo) = Recoil.useRecoilState(todoItemById(id));
+
+  // ...
+  <>
+    {todo.value->React.string}
+  </>
+};
+```
