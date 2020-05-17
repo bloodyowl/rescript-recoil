@@ -11,7 +11,7 @@
 Run the following command:
 
 ```console
-$ yarn add reason-recoil
+$ yarn add recoil reason-recoil
 ```
 
 Then add `reason-recoil` to your `bsconfig.json`'s dependencies:

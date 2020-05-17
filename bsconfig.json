@@ -23,7 +23,8 @@
     "in-source": true
   },
   "suffix": ".bs.js",
-  "bs-dependencies": ["reason-react", "reason-test-framework"],
+  "bs-dependencies": ["reason-react"],
+  "bs-dev-dependencies": ["reason-test-framework"],
   "warnings": {
     "error": "+101"
   },
