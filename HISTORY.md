@@ -1,3 +1,9 @@
+## 0.4.0
+
+Changes:
+
+- Changed the `t` value type (thanks @anmonteiro) (394d247)
+
 ## 0.3.0
 
 Features:
