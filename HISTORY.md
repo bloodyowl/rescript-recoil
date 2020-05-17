@@ -1,3 +1,9 @@
+## 0.4.1
+
+Changes:
+
+- Use a single variant for readOnly/readWrite (0ef7342)
+
 ## 0.4.0
 
 Changes:
