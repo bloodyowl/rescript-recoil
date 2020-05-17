@@ -106,14 +106,14 @@ type callback('additionalArg, 'returnValue) = 'additionalArg => 'returnValue;
 
 [@bs.module "recoil"]
 external useRecoilCallback:
-  ((callbackParam, 'additionalArg) => 'returnValue) =>
+  ([@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue)) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
 
 [@bs.module "recoil"]
 external useRecoilCallback0:
   (
-    (callbackParam, 'additionalArg) => 'returnValue,
+    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
     [@bs.as {json|[]|json}] _
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -121,30 +121,45 @@ external useRecoilCallback0:
 
 [@bs.module "recoil"]
 external useRecoilCallback1:
-  ((callbackParam, 'additionalArg) => 'returnValue, array('a)) =>
+  (
+    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    array('a)
+  ) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
 
 [@bs.module "recoil"]
 external useRecoilCallback2:
-  ((callbackParam, 'additionalArg) => 'returnValue, ('a, 'b)) =>
+  (
+    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    ('a, 'b)
+  ) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
 
 [@bs.module "recoil"]
 external useRecoilCallback3:
-  ((callbackParam, 'additionalArg) => 'returnValue, ('a, 'b, 'c)) =>
+  (
+    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    ('a, 'b, 'c)
+  ) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
 
 [@bs.module "recoil"]
 external useRecoilCallback4:
-  ((callbackParam, 'additionalArg) => 'returnValue, ('a, 'b, 'c, 'd)) =>
+  (
+    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    ('a, 'b, 'c, 'd)
+  ) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
 
 [@bs.module "recoil"]
 external useRecoilCallback5:
-  ((callbackParam, 'additionalArg) => 'returnValue, ('a, 'b, 'c, 'd, 'e)) =>
+  (
+    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    ('a, 'b, 'c, 'd, 'e)
+  ) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
