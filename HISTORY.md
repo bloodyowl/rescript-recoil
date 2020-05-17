@@ -1,3 +1,9 @@
+## 0.3.0
+
+Features:
+
+- Much better API that doesn't require `unboxed` (Thanks @tatchi!) (c8156f1)
+
 ## 0.2.2
 
 Features:
