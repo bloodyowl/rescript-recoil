@@ -1,3 +1,9 @@
+## 0.4.3
+
+Changes:
+
+- Simplify `RecoilRoot` signature (thanks @yawaramin) (41ecf96)
+
 ## 0.4.2
 
 Changes:
