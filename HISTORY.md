@@ -1,3 +1,9 @@
+## 0.5.2
+
+Changes:
+
+- Add uncurry declarations to callbacks (b358177)
+
 ## 0.5.1
 
 Features:
