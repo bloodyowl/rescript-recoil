@@ -327,3 +327,62 @@ describe(
     );
   });
 });
+
+let atomForCallback =
+  Recoil.atom({key: "atomForCallback", default: "HelloWorld"});
+
+module UseRecoilCallbackComponent = {
+  [@react.component]
+  let make = (~onCallback) => {
+    let onClick =
+      Recoil.useRecoilCallback0(({getPromise}, _) => {
+        let _ =
+          getPromise(atomForCallback)
+          ->Js.Promise.then_(
+              value => {
+                onCallback(value);
+                Js.Promise.resolve();
+              },
+              _,
+            );
+        ();
+      });
+
+    <div> <button onClick> "Run callback"->React.string </button> </div>;
+  };
+};
+
+describe("Recoil.useRecoilCallback", ({testAsync, beforeEach, afterEach}) => {
+  let container = ref(None);
+
+  beforeEach(prepareContainer(container));
+  afterEach(cleanupContainer(container));
+
+  testAsync("Can read and set value", ({expect, callback}) => {
+    let container = getContainer(container);
+
+    act(() => {
+      ReactDOMRe.render(
+        <Recoil.RecoilRoot>
+          <UseRecoilCallbackComponent
+            onCallback={value => {
+              expect.string(value).toEqual("HelloWorld");
+              callback();
+            }}
+          />
+        </Recoil.RecoilRoot>,
+        container,
+      )
+    });
+
+    let button =
+      container->DOM.findBySelectorAndTextContent("button", "Run callback");
+
+    act(() => {
+      switch (button) {
+      | Some(button) => Simulate.click(button)
+      | None => ()
+      }
+    });
+  });
+});

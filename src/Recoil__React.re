@@ -32,3 +32,53 @@ type reset = unit => unit;
 [@bs.module "recoil"]
 external useResetRecoilState: Recoil__Value.readWrite('value) => reset =
   "useResetRecoilState";
+
+type callbackParam = {
+  getPromise:
+    'value 'mode.
+    Recoil__Value.t('value, 'mode) => Js.Promise.t('value),
+
+  set: 'value. (Recoil__Value.readWrite('value), 'value => 'value) => unit,
+  reset: 'value. Recoil__Value.readWrite('value) => unit,
+};
+
+type callback('additionalArg, 'returnValue) = 'additionalArg => 'returnValue;
+
+[@bs.module "recoil"]
+external useRecoilCallback0:
+  (
+    (callbackParam, 'additionalArg) => 'returnValue,
+    [@bs.as {json|[]|json}] _
+  ) =>
+  callback('additionalArg, 'returnValue) =
+  "useRecoilCallback";
+
+[@bs.module "recoil"]
+external useRecoilCallback1:
+  ((callbackParam, 'additionalArg) => 'returnValue, array('a)) =>
+  callback('additionalArg, 'returnValue) =
+  "useRecoilCallback";
+
+[@bs.module "recoil"]
+external useRecoilCallback2:
+  ((callbackParam, 'additionalArg) => 'returnValue, ('a, 'b)) =>
+  callback('additionalArg, 'returnValue) =
+  "useRecoilCallback";
+
+[@bs.module "recoil"]
+external useRecoilCallback3:
+  ((callbackParam, 'additionalArg) => 'returnValue, ('a, 'b, 'c)) =>
+  callback('additionalArg, 'returnValue) =
+  "useRecoilCallback";
+
+[@bs.module "recoil"]
+external useRecoilCallback4:
+  ((callbackParam, 'additionalArg) => 'returnValue, ('a, 'b, 'c, 'd)) =>
+  callback('additionalArg, 'returnValue) =
+  "useRecoilCallback";
+
+[@bs.module "recoil"]
+external useRecoilCallback5:
+  ((callbackParam, 'additionalArg) => 'returnValue, ('a, 'b, 'c, 'd, 'e)) =>
+  callback('additionalArg, 'returnValue) =
+  "useRecoilCallback";
