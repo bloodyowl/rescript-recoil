@@ -14,7 +14,7 @@ module RecoilRoot = {
 
 [@bs.module "recoil"]
 external useRecoilState:
-  Recoil__Value.t('a, Recoil__Value.readWrite) => ('a, ('a => 'a) => unit) =
+  Recoil__Value.readWrite('a) => ('a, ('a => 'a) => unit) =
   "useRecoilState";
 
 type value('a) = 'a;
@@ -26,13 +26,11 @@ external useRecoilValue: Recoil__Value.t('a, 'b) => value('a) =
 type set('a) = ('a => 'a) => unit;
 
 [@bs.module "recoil"]
-external useSetRecoilState:
-  Recoil__Value.t('a, Recoil__Value.readWrite) => set('a) =
+external useSetRecoilState: Recoil__Value.readWrite('a) => set('a) =
   "useSetRecoilState";
 
 type reset = unit => unit;
 
 [@bs.module "recoil"]
-external useResetRecoilState:
-  Recoil__Value.t('a, Recoil__Value.readWrite) => reset =
+external useResetRecoilState: Recoil__Value.readWrite('a) => reset =
   "useResetRecoilState";

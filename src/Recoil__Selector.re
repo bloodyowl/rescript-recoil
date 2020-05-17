@@ -2,7 +2,7 @@ type getter = {get: 'a 'b. Recoil__Value.t('a, 'b) => 'a};
 
 type getterAndSetter = {
   get: 'a 'b. Recoil__Value.t('a, 'b) => 'a,
-  set: 'a. (Recoil__Value.t('a, Recoil__Value.readWrite), 'a) => unit,
+  set: 'a. (Recoil__Value.readWrite('a), 'a) => unit,
 };
 
 type selectorConfig('a) = {
@@ -23,15 +23,13 @@ type asyncSelectorConfig('a) = {
 
 [@bs.module "recoil"]
 external selectorWithWrite:
-  selectorWithWriteConfig('a) => Recoil__Value.t('a, Recoil__Value.readWrite) =
+  selectorWithWriteConfig('a) => Recoil__Value.readWrite('a) =
   "selector";
 
 [@bs.module "recoil"]
-external selector:
-  selectorConfig('a) => Recoil__Value.t('a, Recoil__Value.readOnly) =
+external selector: selectorConfig('a) => Recoil__Value.readOnly('a) =
   "selector";
 
 [@bs.module "recoil"]
-external asyncSelector:
-  asyncSelectorConfig('a) => Recoil__Value.t('a, Recoil__Value.readOnly) =
+external asyncSelector: asyncSelectorConfig('a) => Recoil__Value.readOnly('a) =
   "selector";
