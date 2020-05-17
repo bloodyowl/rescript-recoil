@@ -12,54 +12,58 @@ type readOnly('value) = t('value, readOnlyMode);
 type readWrite('value) = t('value, readWriteMode);
 
 // Utility function
-[@bs.module "recoil"] external isRecoilValue: 'a => bool = "isRecoilValue";
+[@bs.module "recoil"] external isRecoilValue: 'any => bool = "isRecoilValue";
 
 // Atom creation
-type atomConfig('a) = {
+type atomConfig('value) = {
   key: string,
-  default: 'a,
+  default: 'value,
 };
 
 [@bs.module "recoil"]
-external atom: atomConfig('a) => readWrite('a) = "atom";
+external atom: atomConfig('value) => readWrite('value) = "atom";
 
 // Selector creation
-type getter = {get: 'a 'b. t('a, 'b) => 'a};
+type getter = {get: 'value 'mode. t('value, 'mode) => 'value};
 
 type getterAndSetter = {
-  get: 'a 'b. t('a, 'b) => 'a,
-  set: 'a. (readWrite('a), 'a) => unit,
+  get: 'value 'mode. t('value, 'mode) => 'value,
+  set: 'value. (readWrite('value), 'value) => unit,
 };
 
-type selectorConfig('a) = {
+type selectorConfig('value) = {
   key: string,
-  get: getter => 'a,
+  get: getter => 'value,
 };
 
-type selectorWithWriteConfig('a) = {
+type selectorWithWriteConfig('value) = {
   key: string,
-  get: getter => 'a,
-  set: (getterAndSetter, 'a) => unit,
+  get: getter => 'value,
+  set: (getterAndSetter, 'value) => unit,
 };
 
-type asyncSelectorConfig('a) = {
+type asyncSelectorConfig('value) = {
   key: string,
-  get: getter => Js.Promise.t('a),
+  get: getter => Js.Promise.t('value),
 };
 
 [@bs.module "recoil"]
-external selectorWithWrite: selectorWithWriteConfig('a) => readWrite('a) =
+external selectorWithWrite:
+  selectorWithWriteConfig('value) => readWrite('value) =
   "selector";
 
 [@bs.module "recoil"]
-external selector: selectorConfig('a) => readOnly('a) = "selector";
+external selector: selectorConfig('value) => readOnly('value) = "selector";
 
 [@bs.module "recoil"]
-external asyncSelector: asyncSelectorConfig('a) => readOnly('a) = "selector";
+external asyncSelector: asyncSelectorConfig('value) => readOnly('value) =
+  "selector";
 
 // React Root component
 module RecoilRoot: {
-  type initializeState = {set: 'a 'b. (Recoil__Value.t('a, 'b), 'a) => unit};
+  type initializeState = {
+    set: 'value 'mode. (t('value, 'mode), 'value) => unit,
+  };
 
   [@react.component] [@bs.module "recoil"]
   external make:
@@ -70,20 +74,24 @@ module RecoilRoot: {
 
 // Hooks
 [@bs.module "recoil"]
-external useRecoilState: readWrite('a) => ('a, ('a => 'a) => unit) =
+external useRecoilState:
+  readWrite('value) => ('value, ('value => 'value) => unit) =
   "useRecoilState";
 
-type value('a) = 'a;
+type value('value) = 'value;
 
 [@bs.module "recoil"]
-external useRecoilValue: t('a, 'b) => value('a) = "useRecoilValue";
+external useRecoilValue: t('value, 'mode) => value('value) =
+  "useRecoilValue";
 
-type set('a) = ('a => 'a) => unit;
+type set('value) = ('value => 'value) => unit;
 
 [@bs.module "recoil"]
-external useSetRecoilState: readWrite('a) => set('a) = "useSetRecoilState";
+external useSetRecoilState: readWrite('value) => set('value) =
+  "useSetRecoilState";
 
 type reset = unit => unit;
 
 [@bs.module "recoil"]
-external useResetRecoilState: readWrite('a) => reset = "useResetRecoilState";
+external useResetRecoilState: readWrite('value) => reset =
+  "useResetRecoilState";

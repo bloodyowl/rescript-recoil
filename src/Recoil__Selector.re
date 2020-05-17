@@ -1,35 +1,36 @@
-type getter = {get: 'a 'b. Recoil__Value.t('a, 'b) => 'a};
+type getter = {get: 'value 'mode. Recoil__Value.t('value, 'mode) => 'value};
 
 type getterAndSetter = {
-  get: 'a 'b. Recoil__Value.t('a, 'b) => 'a,
-  set: 'a. (Recoil__Value.readWrite('a), 'a) => unit,
+  get: 'value 'mode. Recoil__Value.t('value, 'mode) => 'value,
+  set: 'value. (Recoil__Value.readWrite('value), 'value) => unit,
 };
 
-type selectorConfig('a) = {
+type selectorConfig('value) = {
   key: string,
-  get: getter => 'a,
+  get: getter => 'value,
 };
 
-type selectorWithWriteConfig('a) = {
+type selectorWithWriteConfig('value) = {
   key: string,
-  get: getter => 'a,
-  set: (getterAndSetter, 'a) => unit,
+  get: getter => 'value,
+  set: (getterAndSetter, 'value) => unit,
 };
 
-type asyncSelectorConfig('a) = {
+type asyncSelectorConfig('value) = {
   key: string,
-  get: getter => Js.Promise.t('a),
+  get: getter => Js.Promise.t('value),
 };
 
 [@bs.module "recoil"]
 external selectorWithWrite:
-  selectorWithWriteConfig('a) => Recoil__Value.readWrite('a) =
+  selectorWithWriteConfig('value) => Recoil__Value.readWrite('value) =
   "selector";
 
 [@bs.module "recoil"]
-external selector: selectorConfig('a) => Recoil__Value.readOnly('a) =
+external selector: selectorConfig('value) => Recoil__Value.readOnly('value) =
   "selector";
 
 [@bs.module "recoil"]
-external asyncSelector: asyncSelectorConfig('a) => Recoil__Value.readOnly('a) =
+external asyncSelector:
+  asyncSelectorConfig('value) => Recoil__Value.readOnly('value) =
   "selector";

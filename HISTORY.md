@@ -1,3 +1,13 @@
+## 0.4.2
+
+Changes:
+
+- Use meaningful type parameters names (04dbd86)
+
+Fixes:
+
+- Fixed RecoilRoot signature (04dbd86)
+
 ## 0.4.1
 
 Changes:

@@ -1,7 +1,8 @@
-type atomConfig('a) = {
+type atomConfig('value) = {
   key: string,
-  default: 'a,
+  default: 'value,
 };
 
 [@bs.module "recoil"]
-external atom: atomConfig('a) => Recoil__Value.readWrite('a) = "atom";
+external atom: atomConfig('value) => Recoil__Value.readWrite('value) =
+  "atom";
