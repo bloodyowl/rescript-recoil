@@ -1,3 +1,13 @@
+## 0.5.0
+
+Features:
+
+- Add useRecoilCallback (a11e13c)
+
+Changes:
+
+- Move recoil/react and all to peerDeps (e18a46c)
+
 ## 0.4.3
 
 Changes:
