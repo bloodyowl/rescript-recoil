@@ -91,30 +91,24 @@ setState(textState => newTextState); // write
 
 #### `useRecoilValue`
 
-> Note: the `Recoil.value` matching is here to force the rules of hooks
-
 ```reason
-let {Recoil.value: state} = Recoil.useRecoilState(textState);
+let state = Recoil.useRecoilState(textState);
 
 state; // read
 ```
 
 #### `useSetRecoilState`
 
-> Note: the `Recoil.set` matching is here to force the rules of hooks
-
 ```reason
-let {Recoil.set: setState} = Recoil.useSetRecoilState(textState);
+let setState = Recoil.useSetRecoilState(textState);
 
 setState(textState => newTextState); // write
 ```
 
 #### `useResetRecoilState`
 
-> Note: the `Recoil.reset` matching is here to force the rules of hooks
-
 ```reason
-let {Recoil.reset: reset} = Recoil.useResetRecoilState(textState);
+let reset = Recoil.useResetRecoilState(textState);
 
 reset(); // write
 ```

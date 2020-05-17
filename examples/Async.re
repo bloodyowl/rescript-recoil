@@ -38,12 +38,10 @@ let userState =
 module UserIdPicker = {
   [@react.component]
   let make = () => {
-    let {Recoil.value: currentUserId} =
-      Recoil.useRecoilValue(currentUserIdState);
+    let currentUserId = Recoil.useRecoilValue(currentUserIdState);
 
     let (inputValue, setInputValue) = React.useState(() => currentUserId);
-    let {Recoil.set: setCurrentUserIdState} =
-      Recoil.useSetRecoilState(currentUserIdState);
+    let setCurrentUserIdState = Recoil.useSetRecoilState(currentUserIdState);
 
     let setUserId = () => {
       setInputValue(_ => "");
@@ -74,7 +72,7 @@ module UserIdPicker = {
 module UserCard = {
   [@react.component]
   let make = () => {
-    let {Recoil.value: user} = Recoil.useRecoilValue(userState);
+    let user = Recoil.useRecoilValue(userState);
 
     switch (user) {
     | Some(user) =>

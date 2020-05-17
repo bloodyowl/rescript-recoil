@@ -119,7 +119,7 @@ let atom4 = Recoil.atom({key: "Test.Atom.4", default: 0});
 module UseRecoilValueComponent = {
   [@react.component]
   let make = () => {
-    let {Recoil.value: atom4} = Recoil.useRecoilValue(atom4);
+    let atom4 = Recoil.useRecoilValue(atom4);
 
     <div> <strong> atom4->React.int </strong> </div>;
   };
@@ -128,8 +128,8 @@ module UseRecoilValueComponent = {
 module UseSetRecoilStateComponent = {
   [@react.component]
   let make = () => {
-    let {Recoil.set: setAtom4} = Recoil.useSetRecoilState(atom4);
-    let {Recoil.reset: resetAtom4} = Recoil.useResetRecoilState(atom4);
+    let setAtom4 = Recoil.useSetRecoilState(atom4);
+    let resetAtom4 = Recoil.useResetRecoilState(atom4);
 
     <div>
       <button onClick={_ => setAtom4(atom4 => atom4 + 1)}>

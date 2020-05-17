@@ -64,7 +64,7 @@ module TodoItemCreator = {
   [@react.component]
   let make = () => {
     let (inputValue, setInputValue) = React.useState(() => "");
-    let {Recoil.set: setTodoList} = Recoil.useSetRecoilState(todoListState);
+    let setTodoList = Recoil.useSetRecoilState(todoListState);
 
     let addItem = () => {
       setInputValue(_ => "");
@@ -200,14 +200,7 @@ module TodoListFilters = {
 module TodoListStats = {
   [@react.component]
   let make = () => {
-    let {
-      Recoil.value: {
-        totalNum,
-        totalCompletedNum,
-        totalUncompletedNum,
-        percentCompleted,
-      },
-    } =
+    let {totalNum, totalCompletedNum, totalUncompletedNum, percentCompleted} =
       Recoil.useRecoilValue(todoListStatsState);
 
     let formattedPercentCompleted = Js.Math.round(percentCompleted *. 100.0);
@@ -226,8 +219,7 @@ module TodoListStats = {
 module TodoList = {
   [@react.component]
   let make = () => {
-    let {Recoil.value: todoList} =
-      Recoil.useRecoilValue(filteredTodoListState);
+    let todoList = Recoil.useRecoilValue(filteredTodoListState);
     <>
       <TodoListStats />
       <TodoListFilters />
