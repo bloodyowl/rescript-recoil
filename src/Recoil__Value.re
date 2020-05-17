@@ -1,5 +1,7 @@
-type readOnlyMode;
-type readWriteMode;
+type readOnlyMode =
+  | ReadOnly;
+type readWriteMode =
+  | ReadWrite;
 
 type t('value, 'mode);
 type readOnly('value) = t('value, readOnlyMode);

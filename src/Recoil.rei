@@ -1,6 +1,9 @@
 // Value
-type readOnlyMode;
-type readWriteMode;
+type readOnlyMode =
+  | ReadOnly;
+
+type readWriteMode =
+  | ReadWrite;
 
 // A value can either be in read-only mode or in read/write
 type t('value, 'mode);
