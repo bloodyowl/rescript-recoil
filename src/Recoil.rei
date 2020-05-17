@@ -105,6 +105,12 @@ type callbackParam = {
 type callback('additionalArg, 'returnValue) = 'additionalArg => 'returnValue;
 
 [@bs.module "recoil"]
+external useRecoilCallback:
+  ((callbackParam, 'additionalArg) => 'returnValue) =>
+  callback('additionalArg, 'returnValue) =
+  "useRecoilCallback";
+
+[@bs.module "recoil"]
 external useRecoilCallback0:
   (
     (callbackParam, 'additionalArg) => 'returnValue,
