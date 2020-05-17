@@ -1,3 +1,9 @@
+## 0.5.1
+
+Features:
+
+- Add useRecoilCallback without dependencies too (eb20c61)
+
 ## 0.5.0
 
 Features:
