@@ -1,0 +1,45 @@
+{
+  "name": "reason-recoil",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "jest",
+    "format": "find ./src -iname '*.re' | xargs bsrefmt --in-place && find ./src -iname '*.rei' | xargs bsrefmt -i true --in-place && find ./test -iname '*.re' | xargs bsrefmt --in-place"
+  },
+  "keywords": [
+    "BuckleScript",
+    "Recoil",
+    "ReasonML",
+    "Reason",
+    "React"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "bs-platform": "^7.3.1",
+    "jest": "^26.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "reason-test-framework": "^0.3.2",
+    "reason-react": "git://github.com/reasonml/reason-react.git#a70d9e6b51ed0ab27a895fa13807436d20db5620"
+  },
+  "dependencies": {
+    "recoil": "^0.0.7"
+  },
+  "jest": {
+    "moduleDirectories": [
+      "node_modules"
+    ],
+    "roots": [
+      "test"
+    ],
+    "testMatch": [
+      "**/*__test.bs.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(bs-platform|reason-react|reason-react-compat|reason-react-update|bs-webapi|bs-css|bs-css-emotion)/)"
+    ]
+  }
+}
