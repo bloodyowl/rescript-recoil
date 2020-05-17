@@ -1,3 +1,9 @@
+## 0.2.0
+
+Features:
+
+- Differentiale read-only from read-write values (22c4ddc)
+
 ## 0.1.1
 
 Fixes:
