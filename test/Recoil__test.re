@@ -219,10 +219,9 @@ let usernameSize =
       set(username, get(username)->Js.String.slice(~from=0, ~to_=newValue));
     },
   });
-
-let usernameSize2 =
+let usernameSizeReadOnly =
   Recoil.selector({
-    key: "Test.UsernameSize",
+    key: "Test.UsernameSizeReadOnly",
     get: ({get}) => {
       let username = get(username);
       username->Js.String.length;
@@ -235,7 +234,8 @@ module UseRecoilStateComponentWithSelector = {
     let (username, setUsername) = Recoil.useRecoilState(username);
     let (usernameSize, setUsernameSize) =
       Recoil.useRecoilState(usernameSize);
-
+    // Try switching the following line for useRecoilState to check the compile error
+    let _usernameSizeReadOnly = Recoil.useRecoilValue(usernameSizeReadOnly);
     <div>
       <input
         onChange={event => {
