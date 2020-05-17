@@ -232,7 +232,11 @@ module TodoList = {
       <TodoListStats />
       <TodoListFilters />
       <TodoItemCreator />
-      {todoList->Array.map(todoItem => <TodoItem item=todoItem />)->React.array}
+      {todoList
+       ->Array.map(({id} as todoItem) =>
+           <TodoItem item=todoItem key={j|$id|j} />
+         )
+       ->React.array}
     </>;
   };
 };
