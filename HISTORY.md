@@ -1,3 +1,9 @@
+## 0.2.1
+
+Fixes:
+
+- Fixed a type-definition (0209746)
+
 ## 0.2.0
 
 Features:
