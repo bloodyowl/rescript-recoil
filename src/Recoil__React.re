@@ -5,7 +5,7 @@ module RecoilRoot = {
 
   [@react.component] [@bs.module "recoil"]
   external make:
-    (~initialState: initializeState=?, ~children: React.element, unit) =>
+    (~initialState: initializeState=?, ~children: React.element) =>
     React.element =
     "RecoilRoot";
 };
