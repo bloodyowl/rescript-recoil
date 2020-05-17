@@ -67,6 +67,17 @@ let textStateSize = Recoil.selector({
 });
 ```
 
+#### Async
+
+```reason
+let user = Recoil.asyncSelector({
+  key: "user",
+  get: ({get}) => {
+    fetchUser(get(currentUserId))
+  },
+});
+```
+
 ### Hooks
 
 #### `useRecoilState`

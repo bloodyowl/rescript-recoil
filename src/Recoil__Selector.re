@@ -16,6 +16,11 @@ type selectorWithWriteConfig('a) = {
   set: (getterAndSetter, 'a) => unit,
 };
 
+type asyncSelectorConfig('a) = {
+  key: string,
+  get: getter => Js.Promise.t('a),
+};
+
 [@bs.module "recoil"]
 external selectorWithWrite:
   selectorWithWriteConfig('a) => Recoil__Value.t('a, Recoil__Value.readWrite) =
@@ -24,4 +29,9 @@ external selectorWithWrite:
 [@bs.module "recoil"]
 external selector:
   selectorConfig('a) => Recoil__Value.t('a, Recoil__Value.readOnly) =
+  "selector";
+
+[@bs.module "recoil"]
+external asyncSelector:
+  asyncSelectorConfig('a) => Recoil__Value.t('a, Recoil__Value.readOnly) =
   "selector";
