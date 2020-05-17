@@ -113,6 +113,27 @@ let reset = Recoil.useResetRecoilState(textState);
 reset(); // write
 ```
 
+### `useRecoilCallback`
+
+- Dependency free (reevaluates the callback at every render): `useRecoilCallback(...)`
+- Zero-dependency (never reevaluates the callback): `useRecoilCallback0(...)`
+- One-dependency (reevaluates when dep changes): `useRecoilCallback1(..., [|dep|])`
+- Multiple-dependencies: `useRecoilCallback2(..., (dep1, dep2))` (goes from 2 to 5)
+
+```reason
+let onClick = Recoil.useRecoilCallback(({getPromise}, event) => {
+  let _ = getPromise(myAtom)
+    |> Js.Promise.then_(value => {
+      Js.log(value);
+      Js.Promise.resolve()
+    });
+});
+
+<button onClick={onClick}>
+  "Click me"->React.string
+</button>
+```
+
 ## Examples
 
 The [Recoil Basic Tutorial](https://recoiljs.org/docs/basic-tutorial/intro) has been made in ReasonReact: [check the source](./examples/TodoList.re)!
