@@ -1,3 +1,9 @@
+## 0.2.2
+
+Features:
+
+- Add support for async selector (6e0a31b)
+
 ## 0.2.1
 
 Fixes:
