@@ -1,6 +1,6 @@
 {
   "name": "reason-recoil",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
@@ -22,8 +22,8 @@
     "jest": "^26.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "reason-test-framework": "^0.3.2",
-    "reason-react": "git://github.com/reasonml/reason-react.git#a70d9e6b51ed0ab27a895fa13807436d20db5620"
+    "reason-react": "git://github.com/reasonml/reason-react.git#a70d9e6b51ed0ab27a895fa13807436d20db5620",
+    "reason-test-framework": "^0.3.2"
   },
   "dependencies": {
     "recoil": "^0.0.7"
