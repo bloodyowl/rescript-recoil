@@ -1,3 +1,9 @@
+## 0.6.0
+
+Changes:
+
+- Turn off namespacing for a simpler usage (057d9af)
+
 ## 0.5.2
 
 Changes:
