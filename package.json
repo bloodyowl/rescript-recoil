@@ -1,6 +1,6 @@
 {
   "name": "reason-recoil",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
