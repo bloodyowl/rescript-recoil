@@ -1,36 +1,34 @@
 module RecoilRoot = {
-  type initializeState = {set: 'a 'b. (Recoil__Value.t('a, 'b), 'a) => unit};
+  type initializeState = {
+    set: 'value 'mode. (Recoil__Value.t('value, 'mode), 'value) => unit,
+  };
 
   [@react.component] [@bs.module "recoil"]
   external make:
-    (
-      ~initialState: option(initializeState)=?,
-      ~children: React.element,
-      unit
-    ) =>
+    (~initialState: initializeState=?, ~children: React.element, unit) =>
     React.element =
     "RecoilRoot";
 };
 
 [@bs.module "recoil"]
 external useRecoilState:
-  Recoil__Value.readWrite('a) => ('a, ('a => 'a) => unit) =
+  Recoil__Value.readWrite('value) => ('value, ('value => 'value) => unit) =
   "useRecoilState";
 
 type value('a) = 'a;
 
 [@bs.module "recoil"]
-external useRecoilValue: Recoil__Value.t('a, 'b) => value('a) =
+external useRecoilValue: Recoil__Value.t('value, 'mode) => value('value) =
   "useRecoilValue";
 
 type set('a) = ('a => 'a) => unit;
 
 [@bs.module "recoil"]
-external useSetRecoilState: Recoil__Value.readWrite('a) => set('a) =
+external useSetRecoilState: Recoil__Value.readWrite('value) => set('value) =
   "useSetRecoilState";
 
 type reset = unit => unit;
 
 [@bs.module "recoil"]
-external useResetRecoilState: Recoil__Value.readWrite('a) => reset =
+external useResetRecoilState: Recoil__Value.readWrite('value) => reset =
   "useResetRecoilState";
