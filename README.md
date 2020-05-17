@@ -60,7 +60,6 @@ let textStateSize = Recoil.selector({
     let textState = get(textState);
     Js.String.length(textState);
   },
-  // optional
   set: ({set}, newSize) => {
     let currentTextState = get(textState);
     set(textState, currentTextState->Js.String.slice(~from=0, ~to_=newSize));
