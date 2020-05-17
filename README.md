@@ -37,6 +37,22 @@ let textState = Recoil.atom({
 
 ### Selector
 
+A nice feature the OCaml type-system enables is the ability to differenciate Recoil values between the ones that can **only read state** with the ones that can **write state**. This way, you **can't** use hooks with write capabilities with a read-only value.
+
+#### With read only capabilities
+
+```reason
+let textStateSize = Recoil.selector({
+  key: "textStateSize",
+  get: ({get}) => {
+    let textState = get(textState);
+    Js.String.length(textState);
+  },
+});
+```
+
+#### With write capabilities
+
 ```reason
 let textStateSize = Recoil.selector({
   key: "textStateSize",
@@ -45,10 +61,10 @@ let textStateSize = Recoil.selector({
     Js.String.length(textState);
   },
   // optional
-  set: Some(({set}, newSize) => {
+  set: ({set}, newSize) => {
     let currentTextState = get(textState);
     set(textState, currentTextState->Js.String.slice(~from=0, ~to_=newSize));
-  })
+  }
 });
 ```
 

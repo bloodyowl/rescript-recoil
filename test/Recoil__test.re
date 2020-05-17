@@ -20,7 +20,6 @@ describe("Recoil.selector", ({test}) => {
           let atom1 = get(atom2);
           atom1 + 1;
         },
-        set: None,
       });
 
     expect.bool(Recoil.isRecoilValue(selector)).toBeTrue();
@@ -210,21 +209,24 @@ describe(
 
 let username = Recoil.atom({key: "Test.Username", default: ""});
 let usernameSize =
+  Recoil.selectorWithWrite({
+    key: "Test.UsernameSize",
+    get: ({get}) => {
+      let username = get(username);
+      username->Js.String.length;
+    },
+    set: ({set, get}, newValue) => {
+      set(username, get(username)->Js.String.slice(~from=0, ~to_=newValue));
+    },
+  });
+
+let usernameSize2 =
   Recoil.selector({
     key: "Test.UsernameSize",
     get: ({get}) => {
       let username = get(username);
       username->Js.String.length;
     },
-    set:
-      Some(
-        ({set, get}, newValue) => {
-          set(
-            username,
-            get(username)->Js.String.slice(~from=0, ~to_=newValue),
-          )
-        },
-      ),
   });
 
 module UseRecoilStateComponentWithSelector = {

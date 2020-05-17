@@ -1,15 +1,27 @@
-type getter = {get: 'a. Recoil__Value.t('a) => 'a};
+type getter = {get: 'a 'b. Recoil__Value.t('a, 'b) => 'a};
 
 type getterAndSetter = {
-  get: 'a. Recoil__Value.t('a) => 'a,
-  set: 'a. (Recoil__Value.t('a), 'a) => unit,
+  get: 'a 'b. Recoil__Value.t('a, 'b) => 'a,
+  set: 'a. (Recoil__Value.t('a, Recoil__Value.readWrite), 'a) => unit,
 };
 
 type selectorConfig('a) = {
   key: string,
   get: getter => 'a,
-  set: option((getterAndSetter, 'a) => unit),
+};
+
+type selectorWithWriteConfig('a) = {
+  key: string,
+  get: getter => 'a,
+  set: (getterAndSetter, 'a) => unit,
 };
 
 [@bs.module "recoil"]
-external selector: selectorConfig('a) => Recoil__Value.t('a) = "selector";
+external selectorWithWrite:
+  selectorWithWriteConfig('a) => Recoil__Value.t('a, Recoil__Value.readWrite) =
+  "selector";
+
+[@bs.module "recoil"]
+external selector:
+  selectorConfig('a) => Recoil__Value.t('a, Recoil__Value.readOnly) =
+  "selector";
