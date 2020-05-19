@@ -11,6 +11,23 @@ type t('value, 'mode);
 type readOnly('value) = t('value, readOnlyMode);
 type readWrite('value) = t('value, readWriteMode);
 
+module State: {
+  type t;
+  type view =
+    | Loading
+    | HasValue
+    | HasError;
+
+  [@bs.inline "loading"]
+  let loading: t;
+  [@bs.inline "hasValue"]
+  let hasValue: t;
+  [@bs.inline "hasError"]
+  let hasError: t;
+
+  let view: t => view;
+};
+
 // Utility function
 [@bs.module "recoil"] external isRecoilValue: 'any => bool = "isRecoilValue";
 
@@ -83,6 +100,16 @@ type value('value) = 'value;
 [@bs.module "recoil"]
 external useRecoilValue: t('value, 'mode) => value('value) =
   "useRecoilValue";
+
+type loadableValue('a) = {
+  state: State.t,
+  getValue: (. unit) => 'a,
+  toPromise: (. unit) => Js.Promise.t('a),
+};
+
+[@bs.module "recoil"]
+external useRecoilValueLoadable: readOnly('value) => loadableValue('value) =
+  "useRecoilValueLoadable";
 
 type set('value) = ('value => 'value) => unit;
 
