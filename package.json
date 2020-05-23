@@ -6,7 +6,7 @@
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "test": "jest",
-    "format": "find ./src -iname '*.re' | xargs bsrefmt --in-place && find ./src -iname '*.rei' | xargs bsrefmt -i true --in-place && find ./test -iname '*.re' | xargs bsrefmt --in-place",
+    "format": "find ./src -iname '*.re' | xargs bsrefmt --in-place && find ./src -iname '*.rei' | xargs bsrefmt -i true --in-place && find ./test -iname '*.re' | xargs bsrefmt --in-place && find ./examples -iname '*.re' | xargs bsrefmt --in-place",
     "examples": "moduleserve ./examples --port 8000"
   },
   "keywords": [
