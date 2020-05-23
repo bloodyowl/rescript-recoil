@@ -75,11 +75,11 @@ module UserCard = {
     React.useEffect1(
       () => {
         /**
-         * For demonstrating how to use the toPromise function.
+         * This shows how to use the toPromise function.
          * It's actually not needed since data will be fetched
          * when component gets mounted.
          */
-        userLoadable.toPromise(.)
+        Recoil.Loadable.toPromise(userLoadable)
         |> Js.Promise.then_(user => {
              Js.log(user);
              Js.Promise.resolve();
@@ -90,16 +90,18 @@ module UserCard = {
       [|userLoadable|],
     );
 
-    switch (Recoil.State.view(userLoadable.state)) {
-    | Loading => "Loading ..."->React.string
-    | HasValue =>
-      let user = userLoadable.getValue(.);
+    switch (Recoil.Loadable.state(userLoadable)) {
+    | loading when loading == Recoil.Loadable.State.loading =>
+      "Loading ..."->React.string
+    | error when error == Recoil.Loadable.State.hasError =>
+      "Error"->React.string
+    | _ =>
+      let user = Recoil.Loadable.getValue(userLoadable);
       <h1>
         <img src={user.avatar} width="24" height="24" />
         " "->React.string
         <strong> user.username->React.string </strong>
       </h1>;
-    | HasError => "Error"->React.string
     };
   };
 };

@@ -33,15 +33,9 @@ type reset = unit => unit;
 external useResetRecoilState: Recoil__Value.readWrite('value) => reset =
   "useResetRecoilState";
 
-type loadableValue('a) = {
-  state: Recoil__State.t,
-  getValue: (. unit) => 'a,
-  toPromise: (. unit) => Js.Promise.t('a),
-};
-
 [@bs.module "recoil"]
 external useRecoilValueLoadable:
-  Recoil__Value.readOnly('value) => loadableValue('value) =
+  Recoil__Value.t('value, 'mode) => Recoil__Loadable.t('value) =
   "useRecoilValueLoadable";
 
 type callbackParam = {

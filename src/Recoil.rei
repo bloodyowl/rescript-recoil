@@ -11,23 +11,6 @@ type t('value, 'mode);
 type readOnly('value) = t('value, readOnlyMode);
 type readWrite('value) = t('value, readWriteMode);
 
-module State: {
-  type t;
-  type view =
-    | Loading
-    | HasValue
-    | HasError;
-
-  [@bs.inline "loading"]
-  let loading: t;
-  [@bs.inline "hasValue"]
-  let hasValue: t;
-  [@bs.inline "hasError"]
-  let hasError: t;
-
-  let view: t => view;
-};
-
 // Utility function
 [@bs.module "recoil"] external isRecoilValue: 'any => bool = "isRecoilValue";
 
@@ -89,6 +72,44 @@ module RecoilRoot: {
     "RecoilRoot";
 };
 
+module Loadable: {
+  module State: {
+    type t;
+    [@bs.inline "loading"]
+    let loading: t;
+    [@bs.inline "hasValue"]
+    let hasValue: t;
+    [@bs.inline "hasError"]
+    let hasError: t;
+  };
+
+  type t('a);
+  [@bs.get] external state: t('value) => State.t = "state";
+
+  [@bs.send] external getValue: t('value) => 'value = "getValue";
+  [@bs.send]
+  external toPromise: t('value) => Js.Promise.t('value) = "toPromise";
+
+  [@bs.send] [@bs.return undefined_to_opt]
+  external valueMaybe: t('value) => option('value) = "valueMaybe";
+  [@bs.send] external valueOrThrow: t('value) => 'value = "valueOrThrow";
+
+  [@bs.send] external errorMaybe: t('value) => option('error) = "errorMaybe";
+  [@bs.send] external errorOrThrow: t('value) => 'error = "errorOrThrow";
+
+  [@bs.send] [@bs.return undefined_to_opt]
+  external promiseMaybe: t('value) => option(Js.Promise.t('value)) =
+    "promiseMaybe";
+  [@bs.send]
+  external promiseOrThrow: t('value) => Js.Promise.t('value) =
+    "promiseOrThrow";
+
+  [@bs.send] external map: (t('value), 'value => 'b) => t('b) = "map";
+  [@bs.send]
+  external mapAsync: (t('value), 'value => Js.Promise.t('b)) => t('b) =
+    "map";
+};
+
 // Hooks
 [@bs.module "recoil"]
 external useRecoilState:
@@ -101,14 +122,8 @@ type value('value) = 'value;
 external useRecoilValue: t('value, 'mode) => value('value) =
   "useRecoilValue";
 
-type loadableValue('a) = {
-  state: State.t,
-  getValue: (. unit) => 'a,
-  toPromise: (. unit) => Js.Promise.t('a),
-};
-
 [@bs.module "recoil"]
-external useRecoilValueLoadable: readOnly('value) => loadableValue('value) =
+external useRecoilValueLoadable: t('value, 'mode) => Loadable.t('value) =
   "useRecoilValueLoadable";
 
 type set('value) = ('value => 'value) => unit;
