@@ -9,20 +9,24 @@ type user = {
 
 let getUserMock = (~id) => {
   Js.Promise.make((~resolve, ~reject as _) => {
-    let _ =
-      Js.Global.setTimeout(
-        () => {
-          resolve(.
-            Some({
-              id,
-              username: "User " ++ id,
-              avatar: {j|https://avatars.githubusercontent.com/$id?size=64|j},
-            }),
-          )
-        },
-        1_000,
-      );
-    ();
+    switch (id) {
+    | "" => resolve(. None)
+    | _ =>
+      let _ =
+        Js.Global.setTimeout(
+          () => {
+            resolve(.
+              Some({
+                id,
+                username: "User " ++ id,
+                avatar: {j|https://avatars.githubusercontent.com/$id?size=64|j},
+              }),
+            )
+          },
+          1_000,
+        );
+      ();
+    }
   });
 };
 
