@@ -1,6 +1,16 @@
+module State = {
+  type t = string;
+  [@bs.inline]
+  let loading = "loading";
+  [@bs.inline]
+  let hasValue = "hasValue";
+  [@bs.inline]
+  let hasError = "hasError";
+};
+
 type t('a);
 
-[@bs.get] external state: t('value) => Recoil__State.t = "state";
+[@bs.get] external state: t('value) => State.t = "state";
 
 [@bs.send] external getValue: t('value) => 'value = "getValue";
 [@bs.send]
@@ -23,13 +33,3 @@ external promiseOrThrow: t('value) => Js.Promise.t('value) =
 [@bs.send] external map: (t('value), 'value => 'b) => t('b) = "map";
 [@bs.send]
 external mapAsync: (t('value), 'value => Js.Promise.t('b)) => t('b) = "map";
-
-module State = {
-  type t = string;
-  [@bs.inline]
-  let loading = "loading";
-  [@bs.inline]
-  let hasValue = "hasValue";
-  [@bs.inline]
-  let hasError = "hasError";
-};
