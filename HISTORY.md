@@ -1,3 +1,9 @@
+## 0.7.0
+
+Features:
+
+- Add support for `useRecoilValueLoadable` (thanks @tatchi) (379a785)
+
 ## 0.6.0
 
 Changes:
