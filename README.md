@@ -113,7 +113,7 @@ let reset = Recoil.useResetRecoilState(textState);
 reset(); // write
 ```
 
-### `useRecoilCallback`
+#### `useRecoilCallback`
 
 - Dependency free (reevaluates the callback at every render): `useRecoilCallback(...)`
 - Zero-dependency (never reevaluates the callback): `useRecoilCallback0(...)`
@@ -134,7 +134,7 @@ let onClick = Recoil.useRecoilCallback(({getPromise}, event) => {
 </button>
 ```
 
-## `useRecoilValueLoadable`
+#### `useRecoilValueLoadable`
 
 ```reason
 let loadable = Recoil.useRecoilValueLoadable(textState);
