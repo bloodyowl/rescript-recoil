@@ -134,6 +134,15 @@ let onClick = Recoil.useRecoilCallback(({getPromise}, event) => {
 </button>
 ```
 
+## `useRecoilValueLoadable`
+
+```reason
+let loadable = Recoil.useRecoilValueLoadable(textState);
+
+Js.log(loadable->Recoil.Loadable.state);
+Js.log(loadable->Recoil.Loadable.getValue);
+```
+
 ## Examples
 
 The [Recoil Basic Tutorial](https://recoiljs.org/docs/basic-tutorial/intro) has been made in ReasonReact: [check the source](./examples/TodoList.re)!
