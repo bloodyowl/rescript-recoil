@@ -1,3 +1,9 @@
+## 0.8.0
+
+Fixes:
+
+- Fix `ReactRoot`'s `initializeState` (9f8e116)
+
 ## 0.7.0
 
 Features:
