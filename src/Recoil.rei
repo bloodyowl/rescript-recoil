@@ -61,13 +61,14 @@ external asyncSelector: asyncSelectorConfig('value) => readOnly('value) =
 
 // React Root component
 module RecoilRoot: {
-  type initializeState = {
+  type initializeStateParams = {
     set: 'value 'mode. (t('value, 'mode), 'value) => unit,
   };
+  type initializeState = initializeStateParams => unit;
 
   [@react.component] [@bs.module "recoil"]
   external make:
-    (~initialState: initializeState=?, ~children: React.element) =>
+    (~initializeState: initializeState=?, ~children: React.element) =>
     React.element =
     "RecoilRoot";
 };

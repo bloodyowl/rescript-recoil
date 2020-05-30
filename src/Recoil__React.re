@@ -1,11 +1,12 @@
 module RecoilRoot = {
-  type initializeState = {
+  type initializeStateParams = {
     set: 'value 'mode. (Recoil__Value.t('value, 'mode), 'value) => unit,
   };
+  type initializeState = initializeStateParams => unit;
 
   [@react.component] [@bs.module "recoil"]
   external make:
-    (~initialState: initializeState=?, ~children: React.element) =>
+    (~initializeState: initializeState=?, ~children: React.element) =>
     React.element =
     "RecoilRoot";
 };

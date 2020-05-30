@@ -205,6 +205,24 @@ describe(
 
     expect.bool(atomValue->Option.isSome).toBeTrue();
   });
+
+  test("Can take a default store value", ({expect}) => {
+    let container = getContainer(container);
+
+    act(() => {
+      ReactDOMRe.render(
+        <Recoil.RecoilRoot initializeState={({set}) => {set(atom4, 60)}}>
+          <UseRecoilValueComponent />
+        </Recoil.RecoilRoot>,
+        container,
+      )
+    });
+
+    let atomValue =
+      container->DOM.findBySelectorAndTextContent("strong", "60");
+
+    expect.bool(atomValue->Option.isSome).toBeTrue();
+  });
 });
 
 let username = Recoil.atom({key: "Test.Username", default: ""});
