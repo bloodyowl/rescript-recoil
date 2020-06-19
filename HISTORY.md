@@ -1,3 +1,16 @@
+## 0.9.0
+
+> Requires an upgrade to Recoil 0.0.10
+
+Features:
+
+- `atomFamily` and `selectorFamily` (bdf659d)
+- Add `asyncAtom`, `atomFromRecoilValue`, `selectorFromRecoilValue` (bdf659d)
+
+Changes:
+
+- Update `useRecoilCallback` to reflect the new API (bdf659d)
+
 ## 0.8.0
 
 Fixes:
