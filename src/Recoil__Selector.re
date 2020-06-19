@@ -5,20 +5,55 @@ type getterAndSetter = {
   set: 'value. (Recoil__Value.readWrite('value), 'value) => unit,
 };
 
+type getValue('value) = getter => 'value;
+type setValue('value) = (getterAndSetter, 'value) => unit;
+
+type selectorFamily('parameter, 'value) = 'parameter => 'value;
+
 type selectorConfig('value) = {
   key: string,
-  get: getter => 'value,
+  get: getValue('value),
 };
 
 type selectorWithWriteConfig('value) = {
   key: string,
   get: getter => 'value,
-  set: (getterAndSetter, 'value) => unit,
+  set: setValue('value),
 };
+
+[@unboxed]
+type fn('a) =
+  | Fn('a);
 
 type asyncSelectorConfig('value) = {
   key: string,
-  get: getter => Js.Promise.t('value),
+  get: getValue(Js.Promise.t('value)),
+};
+
+type selectorConfigFromRecoilValue('value, 'mode) = {
+  key: string,
+  get: getValue(Recoil__Value.t('value, 'mode)),
+};
+
+type selectorFamilyConfig('parameter, 'value) = {
+  key: string,
+  get: 'parameter => fn(getValue('value)),
+};
+
+type selectorFamilyWithWriteConfig('parameter, 'value) = {
+  key: string,
+  get: getter => 'value,
+  set: 'parameter => fn(setValue('value)),
+};
+
+type asyncSelectorFamilyConfig('parameter, 'value) = {
+  key: string,
+  get: 'parameter => fn(getValue(Js.Promise.t('value))),
+};
+
+type selectorFamilyConfigFromRecoilValue('parameter, 'value, 'mode) = {
+  key: string,
+  get: 'parameter => fn(getValue(Recoil__Value.t('value, 'mode))),
 };
 
 [@bs.module "recoil"]
@@ -34,3 +69,33 @@ external selector: selectorConfig('value) => Recoil__Value.readOnly('value) =
 external asyncSelector:
   asyncSelectorConfig('value) => Recoil__Value.readOnly('value) =
   "selector";
+
+[@bs.module "recoil"]
+external selectorFromRecoilValue:
+  selectorConfigFromRecoilValue('value, 'mode) =>
+  Recoil__Value.readOnly('value) =
+  "selector";
+
+[@bs.module "recoil"]
+external selectorFamilyWithWrite:
+  selectorFamilyWithWriteConfig('parameter, 'value) =>
+  selectorFamily('parameter, Recoil__Value.readWrite('value)) =
+  "selectorFamily";
+
+[@bs.module "recoil"]
+external selectorFamily:
+  selectorFamilyConfig('parameter, 'value) =>
+  selectorFamily('parameter, Recoil__Value.readOnly('value)) =
+  "selectorFamily";
+
+[@bs.module "recoil"]
+external asyncSelectorFamily:
+  asyncSelectorFamilyConfig('parameter, 'value) =>
+  selectorFamily('parameter, Recoil__Value.readOnly('value)) =
+  "selectorFamily";
+
+[@bs.module "recoil"]
+external selectorFamilyFromRecoilValue:
+  selectorFamilyConfigFromRecoilValue('parameter, 'value, 'mode) =>
+  selectorFamily('parameter, Recoil__Value.readOnly('value)) =
+  "selectorFamily";

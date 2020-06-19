@@ -34,7 +34,6 @@ module UseRecoilStateComponent = {
   [@react.component]
   let make = () => {
     let (atom3, setAtom3) = Recoil.useRecoilState(atom3);
-
     <div>
       <strong> atom3->React.int </strong>
       <button onClick={_ => setAtom3(atom3 => atom3 + 1)}>
@@ -353,7 +352,7 @@ module UseRecoilCallbackComponent = {
   [@react.component]
   let make = (~onCallback) => {
     let onClick =
-      Recoil.useRecoilCallback0(({getPromise}, _) => {
+      Recoil.useRecoilCallback0(({snapshot: {getPromise}}, _) => {
         let _ =
           getPromise(atomForCallback)
           ->Js.Promise.then_(
@@ -402,5 +401,65 @@ describe("Recoil.useRecoilCallback", ({testAsync, beforeEach, afterEach}) => {
       | None => ()
       }
     });
+  });
+});
+
+type user = {
+  id: string,
+  name: string,
+};
+let myAtomFamily =
+  Recoil.atomFamily({
+    key: "Test.AtomFamily",
+    default: param => {id: param, name: "User:" ++ param},
+  });
+
+let mySelectorFamily =
+  Recoil.selectorFamily({
+    key: "Test.SelectorFamily",
+    get: param => Fn(({get}) => get(myAtomFamily(param)).name ++ ":Ok"),
+  });
+
+module UseRecoilAtomSelectorComponent = {
+  [@react.component]
+  let make = () => {
+    let atom3 = Recoil.useRecoilValue(myAtomFamily("A"));
+    let selector3 = Recoil.useRecoilValue(mySelectorFamily("A"));
+
+    <div>
+      <strong> atom3.id->React.string </strong>
+      <span> atom3.name->React.string </span>
+      <i> selector3->React.string </i>
+    </div>;
+  };
+};
+
+describe("Recoil.atomFamily/selectorFamily", ({test, beforeEach, afterEach}) => {
+  let container = ref(None);
+
+  beforeEach(prepareContainer(container));
+  afterEach(cleanupContainer(container));
+
+  test("Can read value", ({expect}) => {
+    let container = getContainer(container);
+
+    act(() => {
+      ReactDOMRe.render(
+        <Recoil.RecoilRoot>
+          <UseRecoilAtomSelectorComponent />
+        </Recoil.RecoilRoot>,
+        container,
+      )
+    });
+
+    let id = container->DOM.findBySelectorAndTextContent("strong", "A");
+    let username =
+      container->DOM.findBySelectorAndTextContent("span", "User:A");
+    let selector =
+      container->DOM.findBySelectorAndTextContent("i", "User:A:Ok");
+
+    expect.bool(id->Option.isSome).toBeTrue();
+    expect.bool(username->Option.isSome).toBeTrue();
+    expect.bool(selector->Option.isSome).toBeTrue();
   });
 });
