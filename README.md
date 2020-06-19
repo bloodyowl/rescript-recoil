@@ -177,9 +177,11 @@ let todoItemFamily = Recoil.atomFamily({
 // For selectors
 let todoItemLengthFamily = Recoil.selectorFamily({
   key: "todo",
-  get: param => ({get}) => {
+  // The `Fn` wrapper is needed here so that BuckleScript
+  // outputs the correct value
+  get: param => Fn(({get}) => {
     get(todoItemFamily(param)).value->Js.String2.length;
-  },
+  }),
 });
 ```
 
