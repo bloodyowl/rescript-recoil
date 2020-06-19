@@ -1,3 +1,9 @@
+## 0.9.1
+
+Features:
+
+- Add support for waitForAll/waitForAny/waitForNone/noWait (caff6a7)
+
 ## 0.9.0
 
 > Requires an upgrade to Recoil 0.0.10
