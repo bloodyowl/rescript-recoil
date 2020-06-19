@@ -243,7 +243,7 @@ type mutableSnapshot = {
 
 type snapshot = {
   getPromise: 'value 'mode. t('value, 'mode) => Js.Promise.t('value),
-  getLoadable: 'value 'mode. t('value, 'mode) => Recoil__Loadable.t('value),
+  getLoadable: 'value 'mode. t('value, 'mode) => Loadable.t('value),
   map: (mutableSnapshot => unit) => snapshot,
   asyncMap:
     (mutableSnapshot => Js.Promise.t(unit)) => Js.Promise.t(snapshot),
@@ -317,3 +317,173 @@ external useRecoilCallback5:
   ) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
+
+[@bs.module "recoil"]
+external waitForAll: array(t('value, 'mode)) => readOnly(array('value)) =
+  "waitForAll";
+
+[@bs.module "recoil"]
+external waitForAll2: ((t('v1, 'm1), t('v2, 'm2))) => readOnly(('v1, 'v2)) =
+  "waitForAll";
+
+[@bs.module "recoil"]
+external waitForAll3:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3))) => readOnly(('v1, 'v2, 'v3)) =
+  "waitForAll";
+
+[@bs.module "recoil"]
+external waitForAll4:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3), t('v4, 'm4))) =>
+  readOnly(('v1, 'v2, 'v3, 'v4)) =
+  "waitForAll";
+
+[@bs.module "recoil"]
+external waitForAll5:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3), t('v4, 'm4), t('v5, 'm5))) =>
+  readOnly(('v1, 'v2, 'v3, 'v4, 'v5)) =
+  "waitForAll";
+
+[@bs.module "recoil"]
+external waitForAll6:
+  (
+    (
+      t('v1, 'm1),
+      t('v2, 'm2),
+      t('v3, 'm3),
+      t('v4, 'm4),
+      t('v5, 'm5),
+      t('v6, 'm6),
+    )
+  ) =>
+  readOnly(('v1, 'v2, 'v3, 'v4, 'v5, 'v6)) =
+  "waitForAll";
+
+[@bs.module "recoil"]
+external waitForAny:
+  array(t('value, 'mode)) => readOnly(array(Loadable.t('value))) =
+  "waitForAny";
+
+[@bs.module "recoil"]
+external waitForAny2:
+  ((t('v1, 'm1), t('v2, 'm2))) =>
+  readOnly((Loadable.t('v1), Loadable.t('v2))) =
+  "waitForAny";
+
+[@bs.module "recoil"]
+external waitForAny3:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3))) =>
+  readOnly((Loadable.t('v1), Loadable.t('v2), Loadable.t('v3))) =
+  "waitForAny";
+
+[@bs.module "recoil"]
+external waitForAny4:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3), t('v4, 'm4))) =>
+  readOnly(
+    (Loadable.t('v1), Loadable.t('v2), Loadable.t('v3), Loadable.t('v4)),
+  ) =
+  "waitForAny";
+
+[@bs.module "recoil"]
+external waitForAny5:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3), t('v4, 'm4), t('v5, 'm5))) =>
+  readOnly(
+    (
+      Loadable.t('v1),
+      Loadable.t('v2),
+      Loadable.t('v3),
+      Loadable.t('v4),
+      Loadable.t('v5),
+    ),
+  ) =
+  "waitForAny";
+
+[@bs.module "recoil"]
+external waitForAny6:
+  (
+    (
+      t('v1, 'm1),
+      t('v2, 'm2),
+      t('v3, 'm3),
+      t('v4, 'm4),
+      t('v5, 'm5),
+      t('v6, 'm6),
+    )
+  ) =>
+  readOnly(
+    (
+      Loadable.t('v1),
+      Loadable.t('v2),
+      Loadable.t('v3),
+      Loadable.t('v4),
+      Loadable.t('v5),
+      Loadable.t('v6),
+    ),
+  ) =
+  "waitForAny";
+
+[@bs.module "recoil"]
+external waitForNone:
+  array(t('value, 'mode)) => readOnly(array(Loadable.t('value))) =
+  "waitForNone";
+
+[@bs.module "recoil"]
+external waitForNone2:
+  ((t('v1, 'm1), t('v2, 'm2))) =>
+  readOnly((Loadable.t('v1), Loadable.t('v2))) =
+  "waitForNone";
+
+[@bs.module "recoil"]
+external waitForNone3:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3))) =>
+  readOnly((Loadable.t('v1), Loadable.t('v2), Loadable.t('v3))) =
+  "waitForNone";
+
+[@bs.module "recoil"]
+external waitForNone4:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3), t('v4, 'm4))) =>
+  readOnly(
+    (Loadable.t('v1), Loadable.t('v2), Loadable.t('v3), Loadable.t('v4)),
+  ) =
+  "waitForNone";
+
+[@bs.module "recoil"]
+external waitForNone5:
+  ((t('v1, 'm1), t('v2, 'm2), t('v3, 'm3), t('v4, 'm4), t('v5, 'm5))) =>
+  readOnly(
+    (
+      Loadable.t('v1),
+      Loadable.t('v2),
+      Loadable.t('v3),
+      Loadable.t('v4),
+      Loadable.t('v5),
+    ),
+  ) =
+  "waitForNone";
+
+[@bs.module "recoil"]
+external waitForNone6:
+  (
+    (
+      t('v1, 'm1),
+      t('v2, 'm2),
+      t('v3, 'm3),
+      t('v4, 'm4),
+      t('v5, 'm5),
+      t('v6, 'm6),
+    )
+  ) =>
+  readOnly(
+    (
+      Loadable.t('v1),
+      Loadable.t('v2),
+      Loadable.t('v3),
+      Loadable.t('v4),
+      Loadable.t('v5),
+      Loadable.t('v6),
+    ),
+  ) =
+  "waitForNone";
+
+[@bs.module "recoil"]
+external noWait: t('value, 'mode) => readOnly(Loadable.t('value)) =
+  "noWait";

@@ -463,3 +463,38 @@ describe("Recoil.atomFamily/selectorFamily", ({test, beforeEach, afterEach}) => 
     expect.bool(selector->Option.isSome).toBeTrue();
   });
 });
+
+module UseRecoilWaitForAll = {
+  let atomWait1 = Recoil.atom({key: "atomWait1", default: "Hello"});
+  let atomWait2 = Recoil.atom({key: "atomWait2", default: "World"});
+  [@react.component]
+  let make = () => {
+    let (hello, world) =
+      Recoil.useRecoilValue(Recoil.waitForAll2((atomWait1, atomWait2)));
+
+    <div> <strong> {(hello ++ world)->React.string} </strong> </div>;
+  };
+};
+
+describe("Recoil.waitForAll", ({test, beforeEach, afterEach}) => {
+  let container = ref(None);
+
+  beforeEach(prepareContainer(container));
+  afterEach(cleanupContainer(container));
+
+  test("Can read value", ({expect}) => {
+    let container = getContainer(container);
+
+    act(() => {
+      ReactDOMRe.render(
+        <Recoil.RecoilRoot> <UseRecoilWaitForAll /> </Recoil.RecoilRoot>,
+        container,
+      )
+    });
+
+    let value =
+      container->DOM.findBySelectorAndTextContent("strong", "HelloWorld");
+
+    expect.bool(value->Option.isSome).toBeTrue();
+  });
+});
