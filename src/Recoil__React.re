@@ -39,11 +39,31 @@ external useRecoilValueLoadable:
   Recoil__Value.t('value, 'mode) => Recoil__Loadable.t('value) =
   "useRecoilValueLoadable";
 
-type callbackParam = {
+type mutableSnapshot = {
+  set:
+    'value 'mode.
+    (Recoil__Value.t('value, 'mode), 'value => 'value) => unit,
+
+  reset: 'value 'mode. Recoil__Value.t('value, 'mode) => unit,
+};
+
+type snapshot = {
   getPromise:
     'value 'mode.
     Recoil__Value.t('value, 'mode) => Js.Promise.t('value),
 
+  getLoadable:
+    'value 'mode.
+    Recoil__Value.t('value, 'mode) => Recoil__Loadable.t('value),
+
+  map: (mutableSnapshot => unit) => snapshot,
+  asyncMap:
+    (mutableSnapshot => Js.Promise.t(unit)) => Js.Promise.t(snapshot),
+};
+
+type callbackParam = {
+  snapshot,
+  gotoSnapshot: snapshot => unit,
   set: 'value. (Recoil__Value.readWrite('value), 'value => 'value) => unit,
   reset: 'value. Recoil__Value.readWrite('value) => unit,
 };
@@ -52,14 +72,14 @@ type callback('additionalArg, 'returnValue) = 'additionalArg => 'returnValue;
 
 [@bs.module "recoil"]
 external useRecoilCallback:
-  ([@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue)) =>
+  ([@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue))) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
 
 [@bs.module "recoil"]
 external useRecoilCallback0:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     [@bs.as {json|[]|json}] _
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -68,7 +88,7 @@ external useRecoilCallback0:
 [@bs.module "recoil"]
 external useRecoilCallback1:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     array('a)
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -77,7 +97,7 @@ external useRecoilCallback1:
 [@bs.module "recoil"]
 external useRecoilCallback2:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     ('a, 'b)
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -86,7 +106,7 @@ external useRecoilCallback2:
 [@bs.module "recoil"]
 external useRecoilCallback3:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     ('a, 'b, 'c)
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -95,7 +115,7 @@ external useRecoilCallback3:
 [@bs.module "recoil"]
 external useRecoilCallback4:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     ('a, 'b, 'c, 'd)
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -104,7 +124,7 @@ external useRecoilCallback4:
 [@bs.module "recoil"]
 external useRecoilCallback5:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     ('a, 'b, 'c, 'd, 'e)
   ) =>
   callback('additionalArg, 'returnValue) =

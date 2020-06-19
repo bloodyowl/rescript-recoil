@@ -26,13 +26,13 @@
     "react-dom": "^16.13.1",
     "reason-react": "git://github.com/reasonml/reason-react.git#a70d9e6b51ed0ab27a895fa13807436d20db5620",
     "reason-test-framework": "^0.3.2",
-    "recoil": "^0.0.7"
+    "recoil": "^0.0.10"
   },
   "peerDependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "reason-react": "^0.8.0",
-    "recoil": "^0.0.7"
+    "recoil": "^0.0.10"
   },
   "jest": {
     "moduleDirectories": [

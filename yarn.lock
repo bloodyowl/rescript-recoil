@@ -2850,10 +2850,10 @@ reason-test-framework@^0.3.2:
   resolved "https://registry.yarnpkg.com/reason-test-framework/-/reason-test-framework-0.3.2.tgz#28e690850354bb484a560206cd453a64f5f0bc7c"
   integrity sha512-yc+8fWz5V5tnb/vFnVO7IgcsYjL9RLVWKvDAK42cjvWNMRpiS9zUiOOMIxs2XVix1YW4wqPH8KGdLzs23gsdVQ==
 
-recoil@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.0.7.tgz#197066ac0a983e4728f5973033bbe5b40a277d40"
-  integrity sha512-U/0kniHLk131hKhAX35QGdghVf3+PSkLcFIFoNBNy+yv62qCLm3TE5c3v4x4WYzuKgw1fxU3GGhKHAUYdyRnTQ==
+recoil@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.0.10.tgz#679ab22306f559f8a63c46fd5ff5241539f9248f"
+  integrity sha512-+9gRqehw3yKETmoZbhSnWu4GO10HDb5xYf1CjLF1oXGK2uT6GX5Lu9mfTXwjxV/jXxEKx8MIRUUbgPxvbJ8SEw==
 
 regex-not@^1.0.0, regex-not@^1.0.2:
   version "1.0.2"

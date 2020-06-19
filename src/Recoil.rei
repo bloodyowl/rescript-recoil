@@ -20,8 +20,41 @@ type atomConfig('value) = {
   default: 'value,
 };
 
+type atomFamilyConfig('parameter, 'value) = {
+  key: string,
+  default: 'parameter => 'value,
+};
+
+type atomFamily('parameter, 'value) = 'parameter => 'value;
+
 [@bs.module "recoil"]
 external atom: atomConfig('value) => readWrite('value) = "atom";
+
+[@bs.module "recoil"]
+external asyncAtom: atomConfig(Js.Promise.t('value)) => readWrite('value) =
+  "atom";
+
+[@bs.module "recoil"]
+external atomFromRecoilValue: atomConfig(t('value, _)) => readWrite('value) =
+  "atom";
+
+[@bs.module "recoil"]
+external atomFamily:
+  atomFamilyConfig('parameter, 'value) =>
+  atomFamily('parameter, readWrite('value)) =
+  "atomFamily";
+
+[@bs.module "recoil"]
+external asyncAtomFamily:
+  atomFamilyConfig('parameter, Js.Promise.t('value)) =>
+  atomFamily('parameter, readWrite('value)) =
+  "atomFamily";
+
+[@bs.module "recoil"]
+external atomFamilyFromRecoilValue:
+  atomFamilyConfig('parameter, t('value, _)) =>
+  atomFamily('parameter, readWrite('value)) =
+  "atomFamily";
 
 // Selector creation
 type getter = {get: 'value 'mode. t('value, 'mode) => 'value};
@@ -31,20 +64,55 @@ type getterAndSetter = {
   set: 'value. (readWrite('value), 'value) => unit,
 };
 
+type getValue('value) = getter => 'value;
+type setValue('value) = (getterAndSetter, 'value) => unit;
+
+type selectorFamily('parameter, 'value) = 'parameter => 'value;
+
 type selectorConfig('value) = {
   key: string,
-  get: getter => 'value,
+  get: getValue('value),
 };
 
 type selectorWithWriteConfig('value) = {
   key: string,
   get: getter => 'value,
-  set: (getterAndSetter, 'value) => unit,
+  set: setValue('value),
 };
+
+[@unboxed]
+type fn('a) =
+  | Fn('a);
 
 type asyncSelectorConfig('value) = {
   key: string,
-  get: getter => Js.Promise.t('value),
+  get: getValue(Js.Promise.t('value)),
+};
+
+type selectorConfigFromRecoilValue('value, 'mode) = {
+  key: string,
+  get: getValue(t('value, 'mode)),
+};
+
+type selectorFamilyConfig('parameter, 'value) = {
+  key: string,
+  get: 'parameter => fn(getValue('value)),
+};
+
+type selectorFamilyWithWriteConfig('parameter, 'value) = {
+  key: string,
+  get: getter => 'value,
+  set: 'parameter => fn(setValue('value)),
+};
+
+type asyncSelectorFamilyConfig('parameter, 'value) = {
+  key: string,
+  get: 'parameter => fn(getValue(Js.Promise.t('value))),
+};
+
+type selectorFamilyConfigFromRecoilValue('parameter, 'value, 'mode) = {
+  key: string,
+  get: 'parameter => fn(getValue(t('value, 'mode))),
 };
 
 [@bs.module "recoil"]
@@ -58,6 +126,35 @@ external selector: selectorConfig('value) => readOnly('value) = "selector";
 [@bs.module "recoil"]
 external asyncSelector: asyncSelectorConfig('value) => readOnly('value) =
   "selector";
+
+[@bs.module "recoil"]
+external selectorFromRecoilValue:
+  selectorConfigFromRecoilValue('value, 'mode) => readOnly('value) =
+  "selector";
+
+[@bs.module "recoil"]
+external selectorFamilyWithWrite:
+  selectorFamilyWithWriteConfig('parameter, 'value) =>
+  selectorFamily('parameter, readWrite('value)) =
+  "selectorFamily";
+
+[@bs.module "recoil"]
+external selectorFamily:
+  selectorFamilyConfig('parameter, 'value) =>
+  selectorFamily('parameter, readOnly('value)) =
+  "selectorFamily";
+
+[@bs.module "recoil"]
+external asyncSelectorFamily:
+  asyncSelectorFamilyConfig('parameter, 'value) =>
+  selectorFamily('parameter, readOnly('value)) =
+  "selectorFamily";
+
+[@bs.module "recoil"]
+external selectorFamilyFromRecoilValue:
+  selectorFamilyConfigFromRecoilValue('parameter, 'value, 'mode) =>
+  selectorFamily('parameter, readOnly('value)) =
+  "selectorFamily";
 
 // React Root component
 module RecoilRoot: {
@@ -139,8 +236,22 @@ type reset = unit => unit;
 external useResetRecoilState: readWrite('value) => reset =
   "useResetRecoilState";
 
-type callbackParam = {
+type mutableSnapshot = {
+  set: 'value 'mode. (t('value, 'mode), 'value => 'value) => unit,
+  reset: 'value 'mode. t('value, 'mode) => unit,
+};
+
+type snapshot = {
   getPromise: 'value 'mode. t('value, 'mode) => Js.Promise.t('value),
+  getLoadable: 'value 'mode. t('value, 'mode) => Recoil__Loadable.t('value),
+  map: (mutableSnapshot => unit) => snapshot,
+  asyncMap:
+    (mutableSnapshot => Js.Promise.t(unit)) => Js.Promise.t(snapshot),
+};
+
+type callbackParam = {
+  snapshot,
+  gotoSnapshot: snapshot => unit,
   set: 'value. (readWrite('value), 'value => 'value) => unit,
   reset: 'value. readWrite('value) => unit,
 };
@@ -149,14 +260,14 @@ type callback('additionalArg, 'returnValue) = 'additionalArg => 'returnValue;
 
 [@bs.module "recoil"]
 external useRecoilCallback:
-  ([@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue)) =>
+  ([@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue))) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
 
 [@bs.module "recoil"]
 external useRecoilCallback0:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     [@bs.as {json|[]|json}] _
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -165,7 +276,7 @@ external useRecoilCallback0:
 [@bs.module "recoil"]
 external useRecoilCallback1:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     array('a)
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -174,7 +285,7 @@ external useRecoilCallback1:
 [@bs.module "recoil"]
 external useRecoilCallback2:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     ('a, 'b)
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -183,7 +294,7 @@ external useRecoilCallback2:
 [@bs.module "recoil"]
 external useRecoilCallback3:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     ('a, 'b, 'c)
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -192,7 +303,7 @@ external useRecoilCallback3:
 [@bs.module "recoil"]
 external useRecoilCallback4:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     ('a, 'b, 'c, 'd)
   ) =>
   callback('additionalArg, 'returnValue) =
@@ -201,7 +312,7 @@ external useRecoilCallback4:
 [@bs.module "recoil"]
 external useRecoilCallback5:
   (
-    [@bs.uncurry] ((callbackParam, 'additionalArg) => 'returnValue),
+    [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
     ('a, 'b, 'c, 'd, 'e)
   ) =>
   callback('additionalArg, 'returnValue) =
