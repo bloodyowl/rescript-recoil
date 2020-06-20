@@ -92,7 +92,7 @@ setState(textState => newTextState); // write
 #### `useRecoilValue`
 
 ```reason
-let state = Recoil.useRecoilState(textState);
+let state = Recoil.useRecoilValue(textState);
 
 state; // read
 ```
