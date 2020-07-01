@@ -3,6 +3,7 @@ type getter = {get: 'value 'mode. Recoil__Value.t('value, 'mode) => 'value};
 type getterAndSetter = {
   get: 'value 'mode. Recoil__Value.t('value, 'mode) => 'value,
   set: 'value. (Recoil__Value.readWrite('value), 'value) => unit,
+  reset: 'value. Recoil__Value.readWrite('value) => unit,
 };
 
 type getValue('value) = getter => 'value;
