@@ -1,3 +1,9 @@
+## 0.9.2
+
+Features:
+
+- Add `reset` to selectors with write `set` function (dcea387)
+
 ## 0.9.1
 
 Features:
