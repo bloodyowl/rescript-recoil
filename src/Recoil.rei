@@ -102,7 +102,7 @@ type selectorFamilyConfig('parameter, 'value) = {
 
 type selectorFamilyWithWriteConfig('parameter, 'value) = {
   key: string,
-  get: getter => 'value,
+  get: 'parameter => fn(getValue('value)),
   set: 'parameter => fn(setValue('value)),
 };
 
