@@ -1,3 +1,9 @@
+## 0.9.3
+
+Fixes:
+
+- Add missing parameter to `selectorFamilyWithWrite` (673141f)
+
 ## 0.9.2
 
 Features:
