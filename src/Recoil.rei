@@ -111,6 +111,12 @@ type asyncSelectorFamilyConfig('parameter, 'value) = {
   get: 'parameter => fn(getValue(Js.Promise.t('value))),
 };
 
+type asyncSelectorFamilyWithWriteConfig('parameter, 'value) = {
+  key: string,
+  get: 'parameter => fn(getValue(Js.Promise.t('value))),
+  set: 'parameter => fn(setValue('value)),
+};
+
 type selectorFamilyConfigFromRecoilValue('parameter, 'value, 'mode) = {
   key: string,
   get: 'parameter => fn(getValue(t('value, 'mode))),
@@ -143,6 +149,12 @@ external selectorFamilyWithWrite:
 external selectorFamily:
   selectorFamilyConfig('parameter, 'value) =>
   selectorFamily('parameter, readOnly('value)) =
+  "selectorFamily";
+
+[@bs.module "recoil"]
+external asyncSelectorFamilyWithWrite:
+  asyncSelectorFamilyWithWriteConfig('parameter, 'value) =>
+  selectorFamily('parameter, readWrite('value)) =
   "selectorFamily";
 
 [@bs.module "recoil"]
