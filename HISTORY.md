@@ -1,3 +1,9 @@
+## 0.9.4
+
+Features:
+
+- Add `asyncSelectorFamilyWithWrite` (Thanks [@anmonteiro](https://github.com/anmonteiro)) (547f437)
+
 ## 0.9.3
 
 Fixes:
