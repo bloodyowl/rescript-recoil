@@ -227,11 +227,8 @@ external useRecoilState:
   readWrite('value) => ('value, ('value => 'value) => unit) =
   "useRecoilState";
 
-type value('value) = 'value;
-
 [@bs.module "recoil"]
-external useRecoilValue: t('value, 'mode) => value('value) =
-  "useRecoilValue";
+external useRecoilValue: t('value, 'mode) => 'value = "useRecoilValue";
 
 [@bs.module "recoil"]
 external useRecoilValueLoadable: t('value, 'mode) => Loadable.t('value) =
