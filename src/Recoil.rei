@@ -61,7 +61,7 @@ type getter = {get: 'value 'mode. t('value, 'mode) => 'value};
 
 type getterAndSetter = {
   get: 'value 'mode. t('value, 'mode) => 'value,
-  set: 'value. (readWrite('value), 'value) => unit,
+  set: 'value. (readWrite('value), 'value => 'value) => unit,
   reset: 'value. readWrite('value) => unit,
 };
 

@@ -233,7 +233,9 @@ let usernameSize =
       username->Js.String.length;
     },
     set: ({set, get}, newValue) => {
-      set(username, get(username)->Js.String.slice(~from=0, ~to_=newValue));
+      set(username, _ =>
+        get(username)->Js.String.slice(~from=0, ~to_=newValue)
+      );
     },
   });
 let usernameSizeReadOnly =
