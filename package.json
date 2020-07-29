@@ -19,19 +19,19 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "bs-platform": "^7.3.1",
-    "jest": "^26.0.1",
+    "bs-platform": "^7.3.2",
+    "jest": "^24.9.0",
     "moduleserve": "^0.9.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "reason-react": "git://github.com/reasonml/reason-react.git#a70d9e6b51ed0ab27a895fa13807436d20db5620",
+    "reason-react": "^0.9.1",
     "reason-test-framework": "^0.3.2",
     "recoil": "^0.0.10"
   },
   "peerDependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "reason-react": "^0.8.0",
+    "reason-react": "^0.9.1",
     "recoil": "^0.0.10"
   },
   "jest": {
