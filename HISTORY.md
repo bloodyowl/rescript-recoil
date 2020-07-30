@@ -1,3 +1,15 @@
+## 0.10.0
+
+Features:
+
+- Add uncurried callbacks (Thanks [@anmonteiro](https://github.com/anmonteiro)) (659360f)
+
+Changes:
+
+- Breaking change: use functional setters everywhere (Thanks [@anmonteiro](https://github.com/anmonteiro)) (bae86d4)
+- Upgrade devDependency for ReasonReact (Thanks [@weslenng](https://github.com/weslenng)) (0abe847)
+
+
 ## 0.9.4
 
 Features:
