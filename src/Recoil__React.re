@@ -16,10 +16,8 @@ external useRecoilState:
   Recoil__Value.readWrite('value) => ('value, ('value => 'value) => unit) =
   "useRecoilState";
 
-type value('a) = 'a;
-
 [@bs.module "recoil"]
-external useRecoilValue: Recoil__Value.t('value, 'mode) => value('value) =
+external useRecoilValue: Recoil__Value.t('value, 'mode) => 'value =
   "useRecoilValue";
 
 type set('a) = ('a => 'a) => unit;
@@ -129,3 +127,71 @@ external useRecoilCallback5:
   ) =>
   callback('additionalArg, 'returnValue) =
   "useRecoilCallback";
+
+module Uncurried = {
+  type uncurriedCallback('additionalArg, 'returnValue) =
+    (. 'additionalArg) => 'returnValue;
+
+  [@bs.module "recoil"]
+  external useRecoilCallback:
+    (
+    [@bs.uncurry]
+    (callbackParam => callback('additionalArg, 'returnValue))
+    ) =>
+    uncurriedCallback('additionalArg, 'returnValue) =
+    "useRecoilCallback";
+
+  [@bs.module "recoil"]
+  external useRecoilCallback0:
+    (
+      [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
+      [@bs.as {json|[]|json}] _
+    ) =>
+    uncurriedCallback('additionalArg, 'returnValue) =
+    "useRecoilCallback";
+
+  [@bs.module "recoil"]
+  external useRecoilCallback1:
+    (
+      [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
+      array('a)
+    ) =>
+    uncurriedCallback('additionalArg, 'returnValue) =
+    "useRecoilCallback";
+
+  [@bs.module "recoil"]
+  external useRecoilCallback2:
+    (
+      [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
+      ('a, 'b)
+    ) =>
+    uncurriedCallback('additionalArg, 'returnValue) =
+    "useRecoilCallback";
+
+  [@bs.module "recoil"]
+  external useRecoilCallback3:
+    (
+      [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
+      ('a, 'b, 'c)
+    ) =>
+    uncurriedCallback('additionalArg, 'returnValue) =
+    "useRecoilCallback";
+
+  [@bs.module "recoil"]
+  external useRecoilCallback4:
+    (
+      [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
+      ('a, 'b, 'c, 'd)
+    ) =>
+    uncurriedCallback('additionalArg, 'returnValue) =
+    "useRecoilCallback";
+
+  [@bs.module "recoil"]
+  external useRecoilCallback5:
+    (
+      [@bs.uncurry] (callbackParam => callback('additionalArg, 'returnValue)),
+      ('a, 'b, 'c, 'd, 'e)
+    ) =>
+    uncurriedCallback('additionalArg, 'returnValue) =
+    "useRecoilCallback";
+};
