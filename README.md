@@ -54,7 +54,7 @@ let textStateSize = Recoil.selector({
 #### With write capabilities
 
 ```reason
-let textStateSize = Recoil.selector({
+let textStateSize = Recoil.selectorWithWrite({
   key: "textStateSize",
   get: ({get}) => {
     let textState = get(textState);
