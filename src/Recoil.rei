@@ -20,7 +20,7 @@ type trigger = [ | `get | `set];
 type atomEffect('value) = {
   node: readWrite('value),
   trigger,
-  setSelf: 'value => 'value,
+  setSelf: ('value => 'value) => unit,
   resetSelf: unit => unit,
   onSet: (~newValue: 'value, ~oldValue: 'value) => unit,
 };
@@ -33,8 +33,7 @@ type atomConfig('value) = {
 type atomWithEffectsConfig('value) = {
   key: string,
   default: 'value,
-  effects_UNSTABLE:
-    option(array(atomEffect('value) => option(unit => unit))),
+  effects_UNSTABLE: array(atomEffect('value) => option(unit => unit)),
 };
 
 type atomFamilyConfig('parameter, 'value) = {
@@ -46,9 +45,7 @@ type atomFamilyWithEffectsConfig('parameter, 'value) = {
   key: string,
   default: 'parameter => 'value,
   effects_UNSTABLE:
-    option(
-      'parameter => array(atomEffect('value) => option(unit => unit)),
-    ),
+    'parameter => array(atomEffect('value) => option(unit => unit)),
 };
 
 type atomFamily('parameter, 'value) = 'parameter => 'value;
