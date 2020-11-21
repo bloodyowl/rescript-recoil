@@ -1,5 +1,5 @@
 {
-  "name": "reason-recoil",
+  "name": "rescript-recoil",
   "version": "0.10.0",
   "scripts": {
     "build": "bsb -make-world",
@@ -14,9 +14,10 @@
     "Recoil",
     "ReasonML",
     "Reason",
-    "React"
+    "React",
+    "ReScript"
   ],
-  "author": "",
+  "author": "bloodyowl <bloodyowl@icloud.com>",
   "license": "MIT",
   "devDependencies": {
     "bs-platform": "^8.2.0",
