@@ -11,15 +11,15 @@
 Run the following command:
 
 ```console
-$ yarn add recoil reason-recoil
+$ yarn add recoil rescript-recoil
 ```
 
-Then add `reason-recoil` to your `bsconfig.json`'s dependencies:
+Then add `rescript-recoil` to your `bsconfig.json`'s dependencies:
 
 ```diff
  {
    "bs-dependencies": [
-+    "reason-recoil"
++    "rescript-recoil"
    ]
  }
 ```
@@ -28,11 +28,11 @@ Then add `reason-recoil` to your `bsconfig.json`'s dependencies:
 
 ### Atom
 
-```reason
+```rescript
 let textState = Recoil.atom({
   key: "textState",
   default: "",
-});
+})
 ```
 
 ### Selector
@@ -41,19 +41,19 @@ A nice feature the OCaml type-system enables is the ability to differenciate Rec
 
 #### With read only capabilities
 
-```reason
+```rescript
 let textStateSize = Recoil.selector({
   key: "textStateSize",
   get: ({get}) => {
-    let textState = get(textState);
-    Js.String.length(textState);
+    let textState = get(textState)
+    Js.String.length(textState)
   },
-});
+})
 ```
 
 #### With write capabilities
 
-```reason
+```rescript
 let textStateSize = Recoil.selectorWithWrite({
   key: "textStateSize",
   get: ({get}) => {
@@ -69,48 +69,48 @@ let textStateSize = Recoil.selectorWithWrite({
 
 #### Async
 
-```reason
+```rescript
 let user = Recoil.asyncSelector({
   key: "user",
   get: ({get}) => {
     fetchUser(get(currentUserId))
   },
-});
+})
 ```
 
 ### Hooks
 
 #### `useRecoilState`
 
-```reason
+```rescript
 let (state, setState) = Recoil.useRecoilState(textState);
 
-state; // read
-setState(textState => newTextState); // write
+state // read
+setState(textState => newTextState) // write
 ```
 
 #### `useRecoilValue`
 
-```reason
-let state = Recoil.useRecoilValue(textState);
+```rescript
+let state = Recoil.useRecoilValue(textState)
 
-state; // read
+state // read
 ```
 
 #### `useSetRecoilState`
 
-```reason
-let setState = Recoil.useSetRecoilState(textState);
+```rescript
+let setState = Recoil.useSetRecoilState(textState)
 
-setState(textState => newTextState); // write
+setState(textState => newTextState) // write
 ```
 
 #### `useResetRecoilState`
 
-```reason
-let reset = Recoil.useResetRecoilState(textState);
+```rescript
+let reset = Recoil.useResetRecoilState(textState)
 
-reset(); // write
+reset() // write
 ```
 
 #### `useRecoilCallback`
@@ -120,27 +120,27 @@ reset(); // write
 - One-dependency (reevaluates when dep changes): `useRecoilCallback1(..., [|dep|])`
 - Multiple-dependencies: `useRecoilCallback2(..., (dep1, dep2))` (goes from 2 to 5)
 
-```reason
+```rescript
 let onClick = Recoil.useRecoilCallback(({snapshot: {getPromise}}, event) => {
   let _ = getPromise(myAtom)
     |> Js.Promise.then_(value => {
-      Js.log(value);
+      Js.log(value)
       Js.Promise.resolve()
-    });
-});
+    })
+})
 
 <button onClick={onClick}>
-  "Click me"->React.string
+  {"Click me"->React.string}
 </button>
 ```
 
 #### `useRecoilValueLoadable`
 
-```reason
-let loadable = Recoil.useRecoilValueLoadable(textState);
+```rescript
+let loadable = Recoil.useRecoilValueLoadable(textState)
 
-Js.log(loadable->Recoil.Loadable.state);
-Js.log(loadable->Recoil.Loadable.getValue);
+Js.log(loadable->Recoil.Loadable.state)
+Js.log(loadable->Recoil.Loadable.getValue)
 ```
 
 ## Examples
@@ -157,12 +157,12 @@ and going to [http://localhost:8000/TodoList.html](http://localhost:8000/TodoLis
 
 ### Memoization
 
-```reason
+```rescript
 type t = {
   id: string,
   value: string,
   isCompleted: bool,
-};
+}
 
 // For atoms
 let todoItemFamily = Recoil.atomFamily({
@@ -172,7 +172,7 @@ let todoItemFamily = Recoil.atomFamily({
     value: "",
     isCompleted: false,
   },
-});
+})
 
 // For selectors
 let todoItemLengthFamily = Recoil.selectorFamily({
@@ -180,21 +180,21 @@ let todoItemLengthFamily = Recoil.selectorFamily({
   // The `Fn` wrapper is needed here so that BuckleScript
   // outputs the correct value
   get: param => Fn(({get}) => {
-    get(todoItemFamily(param)).value->Js.String2.length;
+    get(todoItemFamily(param)).value->Js.String2.length
   }),
-});
+})
 ```
 
 And use it within a React component:
 
-```reason
+```rescript
 [@react.component]
 let make = (~todoId) => {
-  let (todo, setTodo) = Recoil.useRecoilState(todoItemFamily(id));
+  let (todo, setTodo) = Recoil.useRecoilState(todoItemFamily(id))
 
   // ...
   <>
     {todo.value->React.string}
   </>
-};
+}
 ```
