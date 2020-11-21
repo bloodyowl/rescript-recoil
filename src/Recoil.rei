@@ -15,14 +15,37 @@ type readWrite('value) = t('value, readWriteMode);
 [@bs.module "recoil"] external isRecoilValue: 'any => bool = "isRecoilValue";
 
 // Atom creation
+type trigger = [ | `get | `set];
+
+type atomEffect('value) = {
+  node: readWrite('value),
+  trigger,
+  setSelf: ('value => 'value) => unit,
+  resetSelf: unit => unit,
+  onSet: (~newValue: 'value, ~oldValue: 'value) => unit,
+};
+
 type atomConfig('value) = {
   key: string,
   default: 'value,
 };
 
+type atomWithEffectsConfig('value) = {
+  key: string,
+  default: 'value,
+  effects_UNSTABLE: array(atomEffect('value) => option(unit => unit)),
+};
+
 type atomFamilyConfig('parameter, 'value) = {
   key: string,
   default: 'parameter => 'value,
+};
+
+type atomFamilyWithEffectsConfig('parameter, 'value) = {
+  key: string,
+  default: 'parameter => 'value,
+  effects_UNSTABLE:
+    'parameter => array(atomEffect('value) => option(unit => unit)),
 };
 
 type atomFamily('parameter, 'value) = 'parameter => 'value;
@@ -31,11 +54,25 @@ type atomFamily('parameter, 'value) = 'parameter => 'value;
 external atom: atomConfig('value) => readWrite('value) = "atom";
 
 [@bs.module "recoil"]
+external atomWithEffects: atomWithEffectsConfig('value) => readWrite('value) =
+  "atom";
+
+[@bs.module "recoil"]
 external asyncAtom: atomConfig(Js.Promise.t('value)) => readWrite('value) =
   "atom";
 
 [@bs.module "recoil"]
+external asyncAtomWithEffects:
+  atomWithEffectsConfig('value) => readWrite('value) =
+  "atom";
+
+[@bs.module "recoil"]
 external atomFromRecoilValue: atomConfig(t('value, _)) => readWrite('value) =
+  "atom";
+
+[@bs.module "recoil"]
+external atomWithEffectsFromRecoilValue:
+  atomWithEffectsConfig(t('value, _)) => readWrite('value) =
   "atom";
 
 [@bs.module "recoil"]
@@ -53,6 +90,24 @@ external asyncAtomFamily:
 [@bs.module "recoil"]
 external atomFamilyFromRecoilValue:
   atomFamilyConfig('parameter, t('value, _)) =>
+  atomFamily('parameter, readWrite('value)) =
+  "atomFamily";
+
+[@bs.module "recoil"]
+external atomFamilyWithEffects:
+  atomFamilyWithEffectsConfig('parameter, 'value) =>
+  atomFamily('parameter, readWrite('value)) =
+  "atomFamily";
+
+[@bs.module "recoil"]
+external asyncAtomFamilyWithEffects:
+  atomFamilyWithEffectsConfig('parameter, Js.Promise.t('value)) =>
+  atomFamily('parameter, readWrite('value)) =
+  "atomFamily";
+
+[@bs.module "recoil"]
+external atomFamilyWithEffectsFromRecoilValue:
+  atomFamilyWithEffectsConfig('parameter, t('value, _)) =>
   atomFamily('parameter, readWrite('value)) =
   "atomFamily";
 

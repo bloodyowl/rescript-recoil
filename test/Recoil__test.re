@@ -567,3 +567,49 @@ describe("Recoil.waitForAll", ({test, beforeEach, afterEach}) => {
     expect.bool(value->Option.isSome).toBeTrue();
   });
 });
+
+let atomWithEffect =
+  Recoil.atomWithEffects({
+    key: "Test.Atom.atomWithEffect",
+    default: 0,
+    effects_UNSTABLE: [|
+      ({setSelf, trigger}) => {
+        if (trigger == `get) {
+          setSelf(value => value + 1);
+        };
+        None;
+      },
+    |],
+  });
+
+module UseRecoilStateWithEffectComponent = {
+  [@react.component]
+  let make = () => {
+    let atomWithEffect = Recoil.useRecoilValue(atomWithEffect);
+    <div> <strong> atomWithEffect->React.int </strong> </div>;
+  };
+};
+
+describe("Recoil.atomWithEffects", ({test, beforeEach, afterEach}) => {
+  let container = ref(None);
+
+  beforeEach(prepareContainer(container));
+  afterEach(cleanupContainer(container));
+
+  test("Can run effects", ({expect}) => {
+    let container = getContainer(container);
+
+    act(() => {
+      ReactDOMRe.render(
+        <Recoil.RecoilRoot>
+          <UseRecoilStateWithEffectComponent />
+        </Recoil.RecoilRoot>,
+        container,
+      )
+    });
+
+    let value = container->DOM.findBySelectorAndTextContent("strong", "1");
+
+    expect.bool(value->Option.isSome).toBeTrue();
+  });
+});

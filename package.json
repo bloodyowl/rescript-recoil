@@ -19,20 +19,20 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "bs-platform": "^7.3.2",
+    "bs-platform": "^8.2.0",
     "jest": "^24.9.0",
     "moduleserve": "^0.9.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "reason-react": "^0.9.1",
     "reason-test-framework": "^0.3.2",
-    "recoil": "^0.0.10"
+    "recoil": "^0.1.1"
   },
   "peerDependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "reason-react": "^0.9.1",
-    "recoil": "^0.0.10"
+    "recoil": "^0.1.1"
   },
   "jest": {
     "moduleDirectories": [

@@ -660,10 +660,10 @@ browser-resolve@^1.11.3:
   dependencies:
     resolve "1.1.7"
 
-bs-platform@^7.3.2:
-  version "7.3.2"
-  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-7.3.2.tgz#301f5c9b4e8cf5713cb60ca22e145e56e793affe"
-  integrity sha512-seJL5g4anK9la4erv+B2o2sMHQCxDF6OCRl9en3hbaUos/S3JsusQ0sPp4ORsbx5eXfHLYBwPljwKXlgpXtsgQ==
+bs-platform@^8.2.0:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-8.3.2.tgz#c307f1cc2d2397c3d088c7f3b62e9f493283cdcf"
+  integrity sha512-iOTi5JIlNPoCPq31NS9ET79FLyCpwTL2JZbgHz35LzY9Bch1iDtbBR3FVGhRbjphxelAP4fLlFONfUNp5Y3a5g==
 
 bser@2.1.1:
   version "2.1.1"
@@ -2684,10 +2684,10 @@ reason-test-framework@^0.3.2:
   resolved "https://registry.yarnpkg.com/reason-test-framework/-/reason-test-framework-0.3.2.tgz#28e690850354bb484a560206cd453a64f5f0bc7c"
   integrity sha512-yc+8fWz5V5tnb/vFnVO7IgcsYjL9RLVWKvDAK42cjvWNMRpiS9zUiOOMIxs2XVix1YW4wqPH8KGdLzs23gsdVQ==
 
-recoil@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.0.10.tgz#679ab22306f559f8a63c46fd5ff5241539f9248f"
-  integrity sha512-+9gRqehw3yKETmoZbhSnWu4GO10HDb5xYf1CjLF1oXGK2uT6GX5Lu9mfTXwjxV/jXxEKx8MIRUUbgPxvbJ8SEw==
+recoil@^0.1.1:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.1.2.tgz#844c612f535826dbe54c977761a67ded16f6d063"
+  integrity sha512-hIRrHlkmW4yITlBFprVYjVPhzPKYrJKoaDrrJtAtbkMeXfXaa/XE5OlyR10n+rNfnKWNToCKb3Z4fo86IGjkzg==
 
 regex-not@^1.0.0, regex-not@^1.0.2:
   version "1.0.2"
