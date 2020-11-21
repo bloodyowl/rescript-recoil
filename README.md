@@ -1,6 +1,6 @@
-# reason-recoil
+# rescript-recoil
 
-![Node.js CI](https://github.com/bloodyowl/reason-recoil/workflows/Node.js%20CI/badge.svg)
+![Node.js CI](https://github.com/bloodyowl/rescript-recoil/workflows/Node.js%20CI/badge.svg)
 
 > Zero-cost bindings to Facebook's [Recoil](https://recoiljs.org) library
 

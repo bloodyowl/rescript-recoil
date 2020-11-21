@@ -1,3 +1,16 @@
+## 0.11.0
+
+**Breaking release**: The minimum version for `bs-platform` is now 8.2.0!
+
+Features:
+
+- Add effects support (f8d77c6)
+
+Changes:
+
+- Move to ReScript (f3d8d67)
+- Rename project (6676938)
+
 ## 0.10.0
 
 Features:
