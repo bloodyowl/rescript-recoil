@@ -1,25 +1,27 @@
 open Belt
-open TestFramework
+open Test
 
-describe("Recoil.atom", ({test}) => test("Can create an atom", ({expect}) => {
-    let atom = Recoil.atom({key: "Test.Atom.1", default: 0})
+let isTrue = (~message=?, value) => assertion(~message?, (a, b) => a === b, value, true)
+let isFalse = (~message=?, value) => assertion(~message?, (a, b) => a === b, value, false)
+let stringEqual = (~message=?, a: string, b: string) =>
+  assertion(~message?, (a, b) => a === b, a, b)
 
-    expect.bool(Recoil.isRecoilValue(atom)).toBeTrue()
-  }))
+test("Recoil.atom", () => {
+  let atom = Recoil.atom({key: "Test.Atom.1", default: 0})
+  isTrue(~message="Can create atom", Recoil.isRecoilValue(atom))
+})
 
-describe("Recoil.selector", ({test}) => test("Can create a selector", ({expect}) => {
-    let atom2 = Recoil.atom({key: "Test.Atom.2", default: 0})
-
-    let selector = Recoil.selector({
-      key: "Test.Selector.1",
-      get: ({get}) => {
-        let atom1 = get(atom2)
-        atom1 + 1
-      },
-    })
-
-    expect.bool(Recoil.isRecoilValue(selector)).toBeTrue()
-  }))
+test("Recoil.selector", () => {
+  let atom2 = Recoil.atom({key: "Test.Atom.2", default: 0})
+  let selector = Recoil.selector({
+    key: "Test.Selector.1",
+    get: ({get}) => {
+      let atom1 = get(atom2)
+      atom1 + 1
+    },
+  })
+  isTrue(~message="Can create selector", Recoil.isRecoilValue(selector))
+})
 
 open ReactTestUtils
 
@@ -45,57 +47,65 @@ module OtherUseRecoilStateComponent = {
   }
 }
 
-describe("Recoil.useRecoilState", ({test, beforeEach, afterEach}) => {
-  let container = ref(None)
+@bs.val external window: Dom.window = "window"
+@bs.get external document: Dom.window => Dom.document = "document"
+@bs.get external body: Dom.document => option<Dom.element> = "body"
+@bs.send
+external createElement: (Dom.document, string) => Dom.element = "createElement"
+@bs.send external remove: Dom.element => unit = "remove"
+@bs.send
+external appendChild: (Dom.element, Dom.element) => Dom.element = "appendChild"
 
-  beforeEach(prepareContainer(container))
-  afterEach(cleanupContainer(container))
+let createContainer = () => {
+  let containerElement = window->document->createElement("div")
+  let _ = window->document->body->Option.map(body => body->appendChild(containerElement))
+  containerElement
+}
 
-  test("Can read and set value", ({expect}) => {
-    let container = getContainer(container)
+let cleanupContainer = container => {
+  ReactDOM.unmountComponentAtNode(container)
+  container->remove
+}
 
-    act(() =>
-      ReactDOMRe.render(
-        <Recoil.RecoilRoot>
-          <UseRecoilStateComponent /> <OtherUseRecoilStateComponent />
-        </Recoil.RecoilRoot>,
-        container,
-      )
+let testWithReact = testWith(~setup=createContainer, ~teardown=cleanupContainer)
+let testAsyncWithReact = testAsyncWith(~setup=createContainer, ~teardown=cleanupContainer)
+
+testWithReact("Recoil.useRecoilState: Can read and set value", container => {
+  act(() =>
+    ReactDOMRe.render(
+      <Recoil.RecoilRoot>
+        <UseRecoilStateComponent /> <OtherUseRecoilStateComponent />
+      </Recoil.RecoilRoot>,
+      container,
     )
+  )
 
-    let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  isTrue(atomValue->Option.isSome)
 
-    expect.bool(atomValue->Option.isSome).toBeTrue()
+  let otherAtomValue = container->DOM.findBySelectorAndTextContent("i", "0")
+  isTrue(otherAtomValue->Option.isSome)
 
-    let otherAtomValue = container->DOM.findBySelectorAndTextContent("i", "0")
+  let button = container->DOM.findBySelectorAndTextContent("button", "Increment")
 
-    expect.bool(otherAtomValue->Option.isSome).toBeTrue()
+  act(() =>
+    switch button {
+    | Some(button) => Simulate.click(button)
+    | None => ()
+    }
+  )
 
-    let button = container->DOM.findBySelectorAndTextContent("button", "Increment")
+  let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  isFalse(previousAtomValue->Option.isSome)
 
-    act(() =>
-      switch button {
-      | Some(button) => Simulate.click(button)
-      | None => ()
-      }
-    )
+  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
+  isTrue(atomValue->Option.isSome)
 
-    let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let previousOtherAtomValue = container->DOM.findBySelectorAndTextContent("i", "0")
+  isFalse(previousOtherAtomValue->Option.isSome)
 
-    expect.bool(previousAtomValue->Option.isSome).toBeFalse()
-
-    let atomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
-
-    expect.bool(atomValue->Option.isSome).toBeTrue()
-
-    let previousOtherAtomValue = container->DOM.findBySelectorAndTextContent("i", "0")
-
-    expect.bool(previousOtherAtomValue->Option.isSome).toBeFalse()
-
-    let otherAtomValue = container->DOM.findBySelectorAndTextContent("i", "1")
-
-    expect.bool(otherAtomValue->Option.isSome).toBeTrue()
-  })
+  let otherAtomValue = container->DOM.findBySelectorAndTextContent("i", "1")
+  isTrue(otherAtomValue->Option.isSome)
 })
 
 let atom4 = Recoil.atom({key: "Test.Atom.4", default: 0})
@@ -122,66 +132,58 @@ module UseSetRecoilStateComponent = {
   }
 }
 
-describe("Recoil.useRecoilValue/useSetRecoilState", ({test, beforeEach, afterEach}) => {
-  let container = ref(None)
-
-  beforeEach(prepareContainer(container))
-  afterEach(cleanupContainer(container))
-
-  test("Can read and set value", ({expect}) => {
-    let container = getContainer(container)
-
-    act(() =>
-      ReactDOMRe.render(
-        <Recoil.RecoilRoot>
-          <UseRecoilValueComponent /> <UseSetRecoilStateComponent />
-        </Recoil.RecoilRoot>,
-        container,
-      )
+testWithReact("Recoil.useRecoilValue/useSetRecoilState can read and set value", container => {
+  act(() =>
+    ReactDOMRe.render(
+      <Recoil.RecoilRoot>
+        <UseRecoilValueComponent /> <UseSetRecoilStateComponent />
+      </Recoil.RecoilRoot>,
+      container,
     )
+  )
 
-    let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
 
-    expect.bool(atomValue->Option.isSome).toBeTrue()
+  isTrue(atomValue->Option.isSome)
 
-    let button = container->DOM.findBySelectorAndTextContent("button", "Increment")
+  let button = container->DOM.findBySelectorAndTextContent("button", "Increment")
 
-    act(() =>
-      switch button {
-      | Some(button) => Simulate.click(button)
-      | None => ()
-      }
-    )
+  act(() =>
+    switch button {
+    | Some(button) => Simulate.click(button)
+    | None => ()
+    }
+  )
 
-    let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
 
-    expect.bool(previousAtomValue->Option.isSome).toBeFalse()
+  isFalse(previousAtomValue->Option.isSome)
 
-    let atomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
+  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
 
-    expect.bool(atomValue->Option.isSome).toBeTrue()
+  isTrue(atomValue->Option.isSome)
 
-    let button = container->DOM.findBySelectorAndTextContent("button", "Reset")
+  let button = container->DOM.findBySelectorAndTextContent("button", "Reset")
 
-    act(() =>
-      switch button {
-      | Some(button) => Simulate.click(button)
-      | None => ()
-      }
-    )
+  act(() =>
+    switch button {
+    | Some(button) => Simulate.click(button)
+    | None => ()
+    }
+  )
 
-    let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
+  let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
 
-    expect.bool(previousAtomValue->Option.isSome).toBeFalse()
+  isFalse(previousAtomValue->Option.isSome)
 
-    let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
 
-    expect.bool(atomValue->Option.isSome).toBeTrue()
-  })
+  isTrue(atomValue->Option.isSome)
+})
 
-  test("Can take a default store value", ({expect}) => {
-    let container = getContainer(container)
-
+testWithReact(
+  "Recoil.useRecoilValue/useSetRecoilState can take a default store value",
+  container => {
     act(() =>
       ReactDOMRe.render(
         <Recoil.RecoilRoot initializeState={({set}) => set(atom4, 60)}>
@@ -193,9 +195,9 @@ describe("Recoil.useRecoilValue/useSetRecoilState", ({test, beforeEach, afterEac
 
     let atomValue = container->DOM.findBySelectorAndTextContent("strong", "60")
 
-    expect.bool(atomValue->Option.isSome).toBeTrue()
-  })
-})
+    isTrue(atomValue->Option.isSome)
+  },
+)
 
 let username = Recoil.atom({key: "Test.Username", default: ""})
 let usernameSize = Recoil.selectorWithWrite({
@@ -240,64 +242,59 @@ external domElementToJsT: Dom.element => {..} = "%identity"
 
 // The following test outputs a warning, but that doesn't look like
 // to be related to our bindings: https://github.com/facebookexperimental/Recoil/issues/31
-describe("Recoil.useRecoilState with selector", ({test, beforeEach, afterEach}) => {
-  let container = ref(None)
-
-  beforeEach(prepareContainer(container))
-  afterEach(cleanupContainer(container))
-
-  test("Can read and set value", ({expect}) => {
-    let container = getContainer(container)
-
-    act(() =>
-      ReactDOMRe.render(
-        <Recoil.RecoilRoot> <UseRecoilStateComponentWithSelector /> </Recoil.RecoilRoot>,
-        container,
-      )
+testWithReact("Recoil.useRecoilState with selector Can read and set value", container => {
+  act(() =>
+    ReactDOMRe.render(
+      <Recoil.RecoilRoot> <UseRecoilStateComponentWithSelector /> </Recoil.RecoilRoot>,
+      container,
     )
+  )
 
-    let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "0")
 
-    expect.bool(selectorValue->Option.isSome).toBeTrue()
+  isTrue(selectorValue->Option.isSome)
 
-    let input = container->DOM.findBySelector("input")
+  let input = container->DOM.findBySelector("input")
 
-    act(() =>
-      switch input {
-      | Some(input) => input->Simulate.changeWithValue("bloodyowl")
-      | None => ()
-      }
-    )
+  act(() =>
+    switch input {
+    | Some(input) => input->Simulate.changeWithValue("bloodyowl")
+    | None => ()
+    }
+  )
 
-    let oldSelectorValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let oldSelectorValue = container->DOM.findBySelectorAndTextContent("strong", "0")
 
-    expect.bool(oldSelectorValue->Option.isSome).toBeFalse()
+  isFalse(oldSelectorValue->Option.isSome)
 
-    let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "9")
+  let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "9")
 
-    expect.bool(selectorValue->Option.isSome).toBeTrue()
+  isTrue(selectorValue->Option.isSome)
 
-    let button = container->DOM.findBySelectorAndTextContent("button", "Slice to 1")
+  let button = container->DOM.findBySelectorAndTextContent("button", "Slice to 1")
 
-    act(() =>
-      switch button {
-      | Some(button) => Simulate.click(button)
-      | None => ()
-      }
-    )
+  act(() =>
+    switch button {
+    | Some(button) => Simulate.click(button)
+    | None => ()
+    }
+  )
 
-    let oldSelectorValue = container->DOM.findBySelectorAndTextContent("strong", "9")
+  let oldSelectorValue = container->DOM.findBySelectorAndTextContent("strong", "9")
 
-    expect.bool(oldSelectorValue->Option.isSome).toBeFalse()
+  isFalse(oldSelectorValue->Option.isSome)
 
-    let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "1")
+  let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "1")
 
-    expect.bool(selectorValue->Option.isSome).toBeTrue()
+  isTrue(selectorValue->Option.isSome)
 
-    let input = container->DOM.findBySelector("input")
+  let input = container->DOM.findBySelector("input")
 
-    expect.value(input->Option.map(item => (item->domElementToJsT)["value"])).toEqual(Some("b"))
-  })
+  assertion(
+    (a, b) => Option.eq(a, b, (a, b) => a == b),
+    input->Option.map(item => (item->domElementToJsT)["value"]),
+    Some("b"),
+  )
 })
 
 let atomForCallback = Recoil.atom({key: "atomForCallback", default: "HelloWorld"})
@@ -316,38 +313,29 @@ module UseRecoilCallbackComponent = {
   }
 }
 
-describe("Recoil.useRecoilCallback", ({testAsync, beforeEach, afterEach}) => {
-  let container = ref(None)
-
-  beforeEach(prepareContainer(container))
-  afterEach(cleanupContainer(container))
-
-  testAsync("Can read and set value", ({expect, callback}) => {
-    let container = getContainer(container)
-
-    act(() =>
-      ReactDOMRe.render(
-        <Recoil.RecoilRoot>
-          <UseRecoilCallbackComponent
-            onCallback={value => {
-              expect.string(value).toEqual("HelloWorld")
-              callback()
-            }}
-          />
-        </Recoil.RecoilRoot>,
-        container,
-      )
+testAsyncWithReact("Recoil.useRecoilCallback Can read and set value", (container, callback) => {
+  act(() =>
+    ReactDOMRe.render(
+      <Recoil.RecoilRoot>
+        <UseRecoilCallbackComponent
+          onCallback={value => {
+            stringEqual(value, "HelloWorld")
+            callback()
+          }}
+        />
+      </Recoil.RecoilRoot>,
+      container,
     )
+  )
 
-    let button = container->DOM.findBySelectorAndTextContent("button", "Run callback")
+  let button = container->DOM.findBySelectorAndTextContent("button", "Run callback")
 
-    act(() =>
-      switch button {
-      | Some(button) => Simulate.click(button)
-      | None => ()
-      }
-    )
-  })
+  act(() =>
+    switch button {
+    | Some(button) => Simulate.click(button)
+    | None => ()
+    }
+  )
 })
 
 let atomForUncurriedCallback = Recoil.atom({
@@ -370,21 +358,15 @@ module UseUncurriedRecoilCallbackComponent = {
   }
 }
 
-describe("Recoil.Uncurried.useRecoilCallback", ({testAsync, beforeEach, afterEach}) => {
-  let container = ref(None)
-
-  beforeEach(prepareContainer(container))
-  afterEach(cleanupContainer(container))
-
-  testAsync("Can read and set value", ({expect, callback}) => {
-    let container = getContainer(container)
-
+testAsyncWithReact(
+  "Recoil.Uncurried.useRecoilCallback can read and set value",
+  (container, callback) => {
     act(() =>
       ReactDOMRe.render(
         <Recoil.RecoilRoot>
           <UseUncurriedRecoilCallbackComponent
             onCallback={value => {
-              expect.string(value).toEqual("HelloWorldUncurried")
+              stringEqual(value, "HelloWorldUncurried")
               callback()
             }}
           />
@@ -401,8 +383,8 @@ describe("Recoil.Uncurried.useRecoilCallback", ({testAsync, beforeEach, afterEac
       | None => ()
       }
     )
-  })
-})
+  },
+)
 
 type user = {
   id: string,
@@ -432,30 +414,21 @@ module UseRecoilAtomSelectorComponent = {
   }
 }
 
-describe("Recoil.atomFamily/selectorFamily", ({test, beforeEach, afterEach}) => {
-  let container = ref(None)
-
-  beforeEach(prepareContainer(container))
-  afterEach(cleanupContainer(container))
-
-  test("Can read value", ({expect}) => {
-    let container = getContainer(container)
-
-    act(() =>
-      ReactDOMRe.render(
-        <Recoil.RecoilRoot> <UseRecoilAtomSelectorComponent /> </Recoil.RecoilRoot>,
-        container,
-      )
+testWithReact("Recoil.atomFamily/selectorFamily can read value", container => {
+  act(() =>
+    ReactDOMRe.render(
+      <Recoil.RecoilRoot> <UseRecoilAtomSelectorComponent /> </Recoil.RecoilRoot>,
+      container,
     )
+  )
 
-    let id = container->DOM.findBySelectorAndTextContent("strong", "A")
-    let username = container->DOM.findBySelectorAndTextContent("span", "User:A")
-    let selector = container->DOM.findBySelectorAndTextContent("i", "User:A:Ok")
+  let id = container->DOM.findBySelectorAndTextContent("strong", "A")
+  let username = container->DOM.findBySelectorAndTextContent("span", "User:A")
+  let selector = container->DOM.findBySelectorAndTextContent("i", "User:A:Ok")
 
-    expect.bool(id->Option.isSome).toBeTrue()
-    expect.bool(username->Option.isSome).toBeTrue()
-    expect.bool(selector->Option.isSome).toBeTrue()
-  })
+  isTrue(id->Option.isSome)
+  isTrue(username->Option.isSome)
+  isTrue(selector->Option.isSome)
 })
 
 module UseRecoilWaitForAll = {
@@ -469,23 +442,14 @@ module UseRecoilWaitForAll = {
   }
 }
 
-describe("Recoil.waitForAll", ({test, beforeEach, afterEach}) => {
-  let container = ref(None)
+testWithReact("Recoil.waitForAll can read value", container => {
+  act(() =>
+    ReactDOMRe.render(<Recoil.RecoilRoot> <UseRecoilWaitForAll /> </Recoil.RecoilRoot>, container)
+  )
 
-  beforeEach(prepareContainer(container))
-  afterEach(cleanupContainer(container))
+  let value = container->DOM.findBySelectorAndTextContent("strong", "HelloWorld")
 
-  test("Can read value", ({expect}) => {
-    let container = getContainer(container)
-
-    act(() =>
-      ReactDOMRe.render(<Recoil.RecoilRoot> <UseRecoilWaitForAll /> </Recoil.RecoilRoot>, container)
-    )
-
-    let value = container->DOM.findBySelectorAndTextContent("strong", "HelloWorld")
-
-    expect.bool(value->Option.isSome).toBeTrue()
-  })
+  isTrue(value->Option.isSome)
 })
 
 let atomWithEffect = Recoil.atomWithEffects({
@@ -509,24 +473,15 @@ module UseRecoilStateWithEffectComponent = {
   }
 }
 
-describe("Recoil.atomWithEffects", ({test, beforeEach, afterEach}) => {
-  let container = ref(None)
-
-  beforeEach(prepareContainer(container))
-  afterEach(cleanupContainer(container))
-
-  test("Can run effects", ({expect}) => {
-    let container = getContainer(container)
-
-    act(() =>
-      ReactDOMRe.render(
-        <Recoil.RecoilRoot> <UseRecoilStateWithEffectComponent /> </Recoil.RecoilRoot>,
-        container,
-      )
+testWithReact("Recoil.atomWithEffects can run effects", container => {
+  act(() =>
+    ReactDOMRe.render(
+      <Recoil.RecoilRoot> <UseRecoilStateWithEffectComponent /> </Recoil.RecoilRoot>,
+      container,
     )
+  )
 
-    let value = container->DOM.findBySelectorAndTextContent("strong", "1")
+  let value = container->DOM.findBySelectorAndTextContent("strong", "1")
 
-    expect.bool(value->Option.isSome).toBeTrue()
-  })
+  isTrue(value->Option.isSome)
 })

@@ -24,7 +24,7 @@
   },
   "suffix": ".bs.js",
   "bs-dependencies": ["reason-react"],
-  "bs-dev-dependencies": ["reason-test-framework"],
+  "bs-dev-dependencies": ["rescript-test"],
   "warnings": {
     "error": "+101"
   },

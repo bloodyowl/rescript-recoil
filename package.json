@@ -5,7 +5,7 @@
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
-    "test": "jest",
+    "test": "retest --with-dom test/*.bs.js",
     "format": "find ./src -iname '*.re' | xargs bsrefmt --in-place && find ./src -iname '*.rei' | xargs bsrefmt -i true --in-place && find ./test -iname '*.re' | xargs bsrefmt --in-place && find ./examples -iname '*.re' | xargs bsrefmt --in-place",
     "examples": "moduleserve ./examples --port 8000"
   },
@@ -21,32 +21,17 @@
   "license": "MIT",
   "devDependencies": {
     "bs-platform": "^8.2.0",
-    "jest": "^24.9.0",
     "moduleserve": "^0.9.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "reason-react": "^0.9.1",
-    "reason-test-framework": "^0.3.2",
-    "recoil": "^0.1.1"
+    "recoil": "0.1.2",
+    "rescript-test": "0.4.1"
   },
   "peerDependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "reason-react": "^0.9.1",
     "recoil": "^0.1.1"
-  },
-  "jest": {
-    "moduleDirectories": [
-      "node_modules"
-    ],
-    "roots": [
-      "test"
-    ],
-    "testMatch": [
-      "**/*__test.bs.js"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(bs-platform|reason-react|reason-react-compat|reason-react-update|bs-webapi|bs-css|bs-css-emotion)/)"
-    ]
   }
 }
