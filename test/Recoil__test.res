@@ -47,24 +47,18 @@ module OtherUseRecoilStateComponent = {
   }
 }
 
-@bs.val external window: Dom.window = "window"
-@bs.get external document: Dom.window => Dom.document = "document"
-@bs.get external body: Dom.document => option<Dom.element> = "body"
-@bs.send
-external createElement: (Dom.document, string) => Dom.element = "createElement"
+@bs.val external window: {..} = "window"
 @bs.send external remove: Dom.element => unit = "remove"
-@bs.send
-external appendChild: (Dom.element, Dom.element) => Dom.element = "appendChild"
 
 let createContainer = () => {
-  let containerElement = window->document->createElement("div")
-  let _ = window->document->body->Option.map(body => body->appendChild(containerElement))
+  let containerElement: Dom.element = window["document"]["createElement"]("div")
+  let _ = window["document"]["body"]["appendChild"](containerElement)
   containerElement
 }
 
 let cleanupContainer = container => {
   ReactDOM.unmountComponentAtNode(container)
-  container->remove
+  remove(container)
 }
 
 let testWithReact = testWith(~setup=createContainer, ~teardown=cleanupContainer)
