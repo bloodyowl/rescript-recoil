@@ -267,6 +267,11 @@ escodegen@^1.14.1:
   optionalDependencies:
     source-map "~0.6.1"
 
+esm@^3.2.25:
+  version "3.2.25"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
+  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
+
 esprima@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
@@ -834,12 +839,13 @@ rescript-js@^0.1.11:
   resolved "https://registry.yarnpkg.com/rescript-js/-/rescript-js-0.1.11.tgz#2f82a30cbd2be2438c27c7056b334d71d97f3156"
   integrity sha512-+g0D8jeca5RLAhAyU4rGqRHdFDLlrTg0ICphz68zVtjxdVrwF8y+JxvtJyQUyglZHX7DE/QUzUCTUGLCmQ0VrA==
 
-rescript-test@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/rescript-test/-/rescript-test-0.5.0.tgz#cba90191bfa3b95bea61c65f983aa0dce4d8dc77"
-  integrity sha512-aKgVqCAabo/iXyxqc88SiWsbMdMLJCHZXPjswkmrF85Ool/JHAAl2GgCZ7875HISvoLTCTi1BXMlB4r8bznUWA==
+rescript-test@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/rescript-test/-/rescript-test-0.6.3.tgz#c4d29678f6a2826ab74c4092b77abbe5a2ac2f77"
+  integrity sha512-V5rWSkZNnhdE2+H8WttLTQoNrF6rBr5JaeygIShL05G58kHh2DgQWFZGl5CBVp/na0UZBAzhKi8XXmwyc3xilQ==
   dependencies:
     cors "^2.8.5"
+    esm "^3.2.25"
     express "^4.17.1"
     get-port "^5.1.1"
     jsdom "^16.4.0"
