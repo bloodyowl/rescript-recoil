@@ -1,3 +1,9 @@
+## 0.11.1
+
+Fixes:
+
+- Fixed `onSet` signature (Thanks [@happylinks](https://github.com/happylinks)) (42943b0)
+
 ## 0.11.0
 
 **Breaking release**: The minimum version for `bs-platform` is now 8.2.0!
