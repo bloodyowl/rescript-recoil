@@ -1,3 +1,9 @@
+## 0.11.2
+
+Fixes:
+
+- Better package description (9d9b1a1)
+
 ## 0.11.1
 
 Fixes:
