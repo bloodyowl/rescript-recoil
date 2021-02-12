@@ -1,3 +1,9 @@
+## 1.0.0
+
+Changes:
+
+- **Breaking**: Move from react-react to @rescript/react (1ae6f67)
+
 ## 0.11.2
 
 Fixes:
