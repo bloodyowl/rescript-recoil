@@ -70,12 +70,10 @@ module UserCard = {
          * when component gets mounted.
          "
       )
-      Recoil.Loadable.toPromise(userLoadable)
-      |> Js.Promise.then_(user => {
-        Js.log(user)
-        Js.Promise.resolve()
-      })
-      |> ignore
+      (Recoil.Loadable.toPromise(userLoadable) |> Js.Promise.then_(user => {
+          Js.log(user)
+          Js.Promise.resolve()
+        }) |> ignore)
       None
     }, [userLoadable])
 
@@ -98,4 +96,7 @@ module App = {
   let make = () => <> <UserIdPicker /> <UserCard /> </>
 }
 
-ReactDOMRe.renderToElementWithId(<Recoil.RecoilRoot> <App /> </Recoil.RecoilRoot>, "root")
+switch ReactDOM.querySelector("#root") {
+| Some(root) => ReactDOM.render(<Recoil.RecoilRoot> <App /> </Recoil.RecoilRoot>, root)
+| None => ()
+}

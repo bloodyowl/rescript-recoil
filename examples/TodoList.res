@@ -213,4 +213,7 @@ module TodoList = {
   }
 }
 
-ReactDOMRe.renderToElementWithId(<Recoil.RecoilRoot> <TodoList /> </Recoil.RecoilRoot>, "root")
+switch ReactDOM.querySelector("#root") {
+| Some(root) => ReactDOM.render(<Recoil.RecoilRoot> <TodoList /> </Recoil.RecoilRoot>, root)
+| None => ()
+}

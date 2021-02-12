@@ -66,7 +66,7 @@ let testAsyncWithReact = testAsyncWith(~setup=createContainer, ~teardown=cleanup
 
 testWithReact("Recoil.useRecoilState: Can read and set value", container => {
   act(() =>
-    ReactDOMRe.render(
+    ReactDOM.render(
       <Recoil.RecoilRoot>
         <UseRecoilStateComponent /> <OtherUseRecoilStateComponent />
       </Recoil.RecoilRoot>,
@@ -128,7 +128,7 @@ module UseSetRecoilStateComponent = {
 
 testWithReact("Recoil.useRecoilValue/useSetRecoilState can read and set value", container => {
   act(() =>
-    ReactDOMRe.render(
+    ReactDOM.render(
       <Recoil.RecoilRoot>
         <UseRecoilValueComponent /> <UseSetRecoilStateComponent />
       </Recoil.RecoilRoot>,
@@ -179,7 +179,7 @@ testWithReact(
   "Recoil.useRecoilValue/useSetRecoilState can take a default store value",
   container => {
     act(() =>
-      ReactDOMRe.render(
+      ReactDOM.render(
         <Recoil.RecoilRoot initializeState={({set}) => set(atom4, 60)}>
           <UseRecoilValueComponent />
         </Recoil.RecoilRoot>,
@@ -238,7 +238,7 @@ external domElementToJsT: Dom.element => {..} = "%identity"
 // to be related to our bindings: https://github.com/facebookexperimental/Recoil/issues/31
 testWithReact("Recoil.useRecoilState with selector Can read and set value", container => {
   act(() =>
-    ReactDOMRe.render(
+    ReactDOM.render(
       <Recoil.RecoilRoot> <UseRecoilStateComponentWithSelector /> </Recoil.RecoilRoot>,
       container,
     )
@@ -309,7 +309,7 @@ module UseRecoilCallbackComponent = {
 
 testAsyncWithReact("Recoil.useRecoilCallback Can read and set value", (container, callback) => {
   act(() =>
-    ReactDOMRe.render(
+    ReactDOM.render(
       <Recoil.RecoilRoot>
         <UseRecoilCallbackComponent
           onCallback={value => {
@@ -356,7 +356,7 @@ testAsyncWithReact(
   "Recoil.Uncurried.useRecoilCallback can read and set value",
   (container, callback) => {
     act(() =>
-      ReactDOMRe.render(
+      ReactDOM.render(
         <Recoil.RecoilRoot>
           <UseUncurriedRecoilCallbackComponent
             onCallback={value => {
@@ -410,7 +410,7 @@ module UseRecoilAtomSelectorComponent = {
 
 testWithReact("Recoil.atomFamily/selectorFamily can read value", container => {
   act(() =>
-    ReactDOMRe.render(
+    ReactDOM.render(
       <Recoil.RecoilRoot> <UseRecoilAtomSelectorComponent /> </Recoil.RecoilRoot>,
       container,
     )
@@ -438,7 +438,7 @@ module UseRecoilWaitForAll = {
 
 testWithReact("Recoil.waitForAll can read value", container => {
   act(() =>
-    ReactDOMRe.render(<Recoil.RecoilRoot> <UseRecoilWaitForAll /> </Recoil.RecoilRoot>, container)
+    ReactDOM.render(<Recoil.RecoilRoot> <UseRecoilWaitForAll /> </Recoil.RecoilRoot>, container)
   )
 
   let value = container->DOM.findBySelectorAndTextContent("strong", "HelloWorld")
@@ -469,7 +469,7 @@ module UseRecoilStateWithEffectComponent = {
 
 testWithReact("Recoil.atomWithEffects can run effects", container => {
   act(() =>
-    ReactDOMRe.render(
+    ReactDOM.render(
       <Recoil.RecoilRoot> <UseRecoilStateWithEffectComponent /> </Recoil.RecoilRoot>,
       container,
     )
