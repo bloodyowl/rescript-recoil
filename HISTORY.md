@@ -1,3 +1,9 @@
+## 1.0.1
+
+Changes:
+
+- Allow higher versions of recoil (3b76965)
+
 ## 1.0.0
 
 Changes:
