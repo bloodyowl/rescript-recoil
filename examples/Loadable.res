@@ -6,9 +6,10 @@ type user = {
   avatar: string,
 }
 
-let getUserMock = (~id) => Js.Promise.make((~resolve, ~reject as _) => {
+let getUserMock = (~id) =>
+  Js.Promise.make((~resolve, ~reject as _) => {
     let _ = Js.Global.setTimeout(() =>
-      resolve(.{
+      resolve(. {
         id: id,
         username: "User " ++ id,
         avatar: j`https://avatars.githubusercontent.com/$id?size=64`, //avatars.githubusercontent.com/$id?size=64|j},
@@ -63,23 +64,25 @@ module UserCard = {
     let userLoadable = Recoil.useRecoilValueLoadable(userState)
 
     React.useEffect1(() => {
-      @ocaml.doc(
-        "
+      @ocaml.doc("
          * This shows how to use the toPromise function.
          * It's actually not needed since data will be fetched
          * when component gets mounted.
-         "
-      )
-      (Recoil.Loadable.toPromise(userLoadable) |> Js.Promise.then_(user => {
+         ")
+      (
+        Recoil.Loadable.toPromise(userLoadable)
+        |> Js.Promise.then_(user => {
           Js.log(user)
           Js.Promise.resolve()
-        }) |> ignore)
+        })
+        |> ignore
+      )
       None
     }, [userLoadable])
 
     switch Recoil.Loadable.state(userLoadable) {
-    | loading when loading == Recoil.Loadable.State.loading => "Loading ..."->React.string
-    | error when error == Recoil.Loadable.State.hasError => "Error"->React.string
+    | loading if loading == Recoil.Loadable.State.loading => "Loading ..."->React.string
+    | error if error == Recoil.Loadable.State.hasError => "Error"->React.string
     | _ =>
       let user = Recoil.Loadable.getValue(userLoadable)
       <h1>

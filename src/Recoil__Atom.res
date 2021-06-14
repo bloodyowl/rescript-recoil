@@ -32,60 +32,60 @@ type atomFamilyWithEffectsConfig<'parameter, 'value> = {
 
 type atomFamily<'parameter, 'value> = 'parameter => 'value
 
-@bs.module("recoil")
+@module("recoil")
 external atom: atomConfig<'value> => Recoil__Value.readWrite<'value> = "atom"
 
-@bs.module("recoil")
+@module("recoil")
 external atomWithEffects: atomWithEffectsConfig<'value> => Recoil__Value.readWrite<'value> = "atom"
 
-@bs.module("recoil")
+@module("recoil")
 external asyncAtom: atomConfig<Js.Promise.t<'value>> => Recoil__Value.readWrite<'value> = "atom"
 
-@bs.module("recoil")
+@module("recoil")
 external asyncAtomWithEffects: atomWithEffectsConfig<'value> => Recoil__Value.readWrite<'value> =
   "atom"
 
-@bs.module("recoil")
+@module("recoil")
 external atomFromRecoilValue: atomConfig<Recoil__Value.t<'value, _>> => Recoil__Value.readWrite<
   'value,
 > = "atom"
 
-@bs.module("recoil")
+@module("recoil")
 external atomWithEffectsFromRecoilValue: atomWithEffectsConfig<
   Recoil__Value.t<'value, _>,
 > => Recoil__Value.readWrite<'value> = "atom"
 
-@bs.module("recoil")
+@module("recoil")
 external atomFamily: atomFamilyConfig<'parameter, 'value> => atomFamily<
   'parameter,
   Recoil__Value.readWrite<'value>,
 > = "atomFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external asyncAtomFamily: atomFamilyConfig<'parameter, Js.Promise.t<'value>> => atomFamily<
   'parameter,
   Recoil__Value.readWrite<'value>,
 > = "atomFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external atomFamilyFromRecoilValue: atomFamilyConfig<
   'parameter,
   Recoil__Value.t<'value, _>,
 > => atomFamily<'parameter, Recoil__Value.readWrite<'value>> = "atomFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external atomFamilyWithEffects: atomFamilyWithEffectsConfig<'parameter, 'value> => atomFamily<
   'parameter,
   Recoil__Value.readWrite<'value>,
 > = "atomFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external asyncAtomFamilyWithEffects: atomFamilyWithEffectsConfig<
   'parameter,
   Js.Promise.t<'value>,
 > => atomFamily<'parameter, Recoil__Value.readWrite<'value>> = "atomFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external atomFamilyWithEffectsFromRecoilValue: atomFamilyWithEffectsConfig<
   'parameter,
   Recoil__Value.t<'value, _>,

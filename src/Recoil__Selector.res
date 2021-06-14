@@ -62,47 +62,47 @@ type selectorFamilyConfigFromRecoilValue<'parameter, 'value, 'mode> = {
   get: 'parameter => fn<getValue<Recoil__Value.t<'value, 'mode>>>,
 }
 
-@bs.module("recoil")
+@module("recoil")
 external selectorWithWrite: selectorWithWriteConfig<'value> => Recoil__Value.readWrite<'value> =
   "selector"
 
-@bs.module("recoil")
+@module("recoil")
 external selector: selectorConfig<'value> => Recoil__Value.readOnly<'value> = "selector"
 
-@bs.module("recoil")
+@module("recoil")
 external asyncSelector: asyncSelectorConfig<'value> => Recoil__Value.readOnly<'value> = "selector"
 
-@bs.module("recoil")
+@module("recoil")
 external selectorFromRecoilValue: selectorConfigFromRecoilValue<
   'value,
   'mode,
 > => Recoil__Value.readOnly<'value> = "selector"
 
-@bs.module("recoil")
+@module("recoil")
 external selectorFamilyWithWrite: selectorFamilyWithWriteConfig<
   'parameter,
   'value,
 > => selectorFamily<'parameter, Recoil__Value.readWrite<'value>> = "selectorFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external selectorFamily: selectorFamilyConfig<'parameter, 'value> => selectorFamily<
   'parameter,
   Recoil__Value.readOnly<'value>,
 > = "selectorFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external asyncSelectorFamily: asyncSelectorFamilyConfig<'parameter, 'value> => selectorFamily<
   'parameter,
   Recoil__Value.readOnly<'value>,
 > = "selectorFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external asyncSelectorFamilyWithWrite: asyncSelectorFamilyWithWriteConfig<
   'parameter,
   'value,
 > => selectorFamily<'parameter, Recoil__Value.readWrite<'value>> = "selectorFamily"
 
-@bs.module("recoil")
+@module("recoil")
 external selectorFamilyFromRecoilValue: selectorFamilyConfigFromRecoilValue<
   'parameter,
   'value,

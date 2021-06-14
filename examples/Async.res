@@ -6,7 +6,8 @@ type user = {
   avatar: string,
 }
 
-let getUserMock = (~id) => Js.Promise.make((~resolve, ~reject as _) =>
+let getUserMock = (~id) =>
+  Js.Promise.make((~resolve, ~reject as _) =>
     switch id {
     | "" => resolve(. None)
     | _ =>

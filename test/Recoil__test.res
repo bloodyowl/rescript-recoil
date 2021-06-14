@@ -47,12 +47,12 @@ module OtherUseRecoilStateComponent = {
   }
 }
 
-@bs.val external window: {..} = "window"
-@bs.send external remove: Dom.element => unit = "remove"
+@val external window: {..} = "window"
+@send external remove: Dom.element => unit = "remove"
 
 let createContainer = () => {
-  let containerElement: Dom.element = window["document"]["createElement"]("div")
-  let _ = window["document"]["body"]["appendChild"](containerElement)
+  let containerElement: Dom.element = window["document"]["createElement"](. "div")
+  let _ = window["document"]["body"]["appendChild"](. containerElement)
   containerElement
 }
 
@@ -352,33 +352,33 @@ module UseUncurriedRecoilCallbackComponent = {
   }
 }
 
-testAsyncWithReact(
-  "Recoil.Uncurried.useRecoilCallback can read and set value",
-  (container, callback) => {
-    act(() =>
-      ReactDOM.render(
-        <Recoil.RecoilRoot>
-          <UseUncurriedRecoilCallbackComponent
-            onCallback={value => {
-              stringEqual(value, "HelloWorldUncurried")
-              callback()
-            }}
-          />
-        </Recoil.RecoilRoot>,
-        container,
-      )
+testAsyncWithReact("Recoil.Uncurried.useRecoilCallback can read and set value", (
+  container,
+  callback,
+) => {
+  act(() =>
+    ReactDOM.render(
+      <Recoil.RecoilRoot>
+        <UseUncurriedRecoilCallbackComponent
+          onCallback={value => {
+            stringEqual(value, "HelloWorldUncurried")
+            callback()
+          }}
+        />
+      </Recoil.RecoilRoot>,
+      container,
     )
+  )
 
-    let button = container->DOM.findBySelectorAndTextContent("button", "Run callback")
+  let button = container->DOM.findBySelectorAndTextContent("button", "Run callback")
 
-    act(() =>
-      switch button {
-      | Some(button) => Simulate.click(button)
-      | None => ()
-      }
-    )
-  },
-)
+  act(() =>
+    switch button {
+    | Some(button) => Simulate.click(button)
+    | None => ()
+    }
+  )
+})
 
 type user = {
   id: string,
