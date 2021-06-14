@@ -79,11 +79,6 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
-bs-platform@^8.2.0:
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-8.3.2.tgz#c307f1cc2d2397c3d088c7f3b62e9f493283cdcf"
-  integrity sha512-iOTi5JIlNPoCPq31NS9ET79FLyCpwTL2JZbgHz35LzY9Bch1iDtbBR3FVGhRbjphxelAP4fLlFONfUNp5Y3a5g==
-
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
@@ -637,18 +632,12 @@ request@^2.88.2:
     tunnel-agent "^0.6.0"
     uuid "^3.3.2"
 
-rescript-future@^1.1.0:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/rescript-future/-/rescript-future-1.1.2.tgz#fb4e976b47126a0071c81b5da4b71535165ffdcc"
-  integrity sha512-8p2m4Fjado2gN8W96/lv1zR9xGgDC3rm6PN0tL2B6oxNW0g2q02tZ6nPNAIuDS1IAxxD1gH6FDhQT91pGplgjw==
-
-rescript-test@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/rescript-test/-/rescript-test-2.0.7.tgz#11c46fee8f824650d4869e39482cdeb5a2527d2c"
-  integrity sha512-BFtw/gI286MC7Rj8bjtVHnq5zh/pf+lC+awNUusHT4pYnhiR0jncv29Y0/LonPucXmzqyypCVhfY/2xkhD5ZBQ==
+rescript-test@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/rescript-test/-/rescript-test-3.0.0.tgz#d2242286f2dddad04daace33dfe1e1e0bf336690"
+  integrity sha512-XbM2BLg1GCWgcQ4sbeY8y4XZa+nYOJg0X1FKsHkGG8PlOZPBuQnpqXBUZjZMJxqEaZScIUQ8fREe+QC4cc/CGA==
   dependencies:
     jsdom "16.4.0"
-    rescript-future "^1.1.0"
 
 rescript@^9.1.4:
   version "9.1.4"

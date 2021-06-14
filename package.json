@@ -4,7 +4,7 @@
   "description": "Zero-cost bindings to Facebook's Recoil library",
   "scripts": {
     "build": "rescript",
-    "start": "rescript build -w",
+    "start": "rescript build -with-deps -w",
     "clean": "rescript clean",
     "test": "retest --with-dom test/*.bs.js",
     "format": "find ./src -iname '*.re' | xargs bsrefmt --in-place && find ./src -iname '*.rei' | xargs bsrefmt -i true --in-place && find ./test -iname '*.re' | xargs bsrefmt --in-place && find ./examples -iname '*.re' | xargs bsrefmt --in-place",
@@ -22,13 +22,12 @@
   "license": "MIT",
   "devDependencies": {
     "@rescript/react": "^0.10.1",
-    "bs-platform": "^8.2.0",
     "moduleserve": "^0.9.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "recoil": "0.1.2",
     "rescript": "^9.1.4",
-    "rescript-test": "^2.0.7"
+    "rescript-test": "^3.0.0"
   },
   "peerDependencies": {
     "@rescript/react": "^0.10.1",
