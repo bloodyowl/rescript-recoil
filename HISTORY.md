@@ -1,3 +1,9 @@
+## 2.0.0
+
+Changes:
+
+- Update to ReScript (7ac9c88)
+
 ## 1.0.1
 
 Changes:
