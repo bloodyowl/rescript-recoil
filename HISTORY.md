@@ -1,3 +1,9 @@
+## 2.1.0
+
+Features:
+
+- Add support `dangerouslyAllowMutability` (thanks [https://github.com/happylinks](@happylinks)!) (054cd23)
+
 ## 2.0.0
 
 Changes:
