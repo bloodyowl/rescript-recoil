@@ -34,6 +34,12 @@ type atomWithEffectsConfig<'value> = {
   effects_UNSTABLE: array<atomEffect<'value> => option<unit => unit>>,
 }
 
+type atomWithDangerouslyAllowMutabilityConfig<'value> = {
+  key: string,
+  default: 'value,
+  dangerouslyAllowMutability: bool,
+}
+
 type atomFamilyConfig<'parameter, 'value> = {
   key: string,
   default: 'parameter => 'value,
@@ -52,6 +58,12 @@ external atom: atomConfig<'value> => readWrite<'value> = "atom"
 
 @module("recoil")
 external atomWithEffects: atomWithEffectsConfig<'value> => readWrite<'value> = "atom"
+
+@module("recoil")
+external atomWithDangerouslyAllowMutability: atomWithDangerouslyAllowMutabilityConfig<
+  'value,
+> => readWrite<'value> = "atom"
+
 
 @module("recoil")
 external asyncAtom: atomConfig<Js.Promise.t<'value>> => readWrite<'value> = "atom"
