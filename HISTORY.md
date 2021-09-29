@@ -1,3 +1,9 @@
+## 2.1.1
+
+Fixes:
+
+- Add missing `atomWithDangerouslyAllowMutability` signature (this [https://github.com/searleser97](@searleser97)) (0ef742a)
+
 ## 2.1.0
 
 Features:
