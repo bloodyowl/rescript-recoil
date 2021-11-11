@@ -20,7 +20,7 @@ type atomEffect<'value> = {
   trigger: trigger,
   setSelf: ('value => 'value) => unit,
   resetSelf: unit => unit,
-  onSet: ((~newValue: 'value, ~oldValue: 'value) => unit) => unit,
+  onSet: ((~newValue: 'value, ~oldValue: 'value, ~isReset: bool) => unit) => unit,
 }
 
 type atomConfig<'value> = {
