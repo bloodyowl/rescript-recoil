@@ -479,3 +479,16 @@ testWithReact("Recoil.atomWithEffects can run effects", container => {
 
   isTrue(value->Option.isSome)
 })
+
+@module("recoil") @new
+external makeDefaultValue: unit => 'a = "DefaultValue"
+
+test("Recoil.DefaultValue", () => {
+  let defaultValue = makeDefaultValue()
+  isTrue(Recoil.DefaultValue.isDefaultValue(defaultValue))
+  isFalse(Recoil.DefaultValue.isDefaultValue(0))
+  isFalse(Recoil.DefaultValue.isDefaultValue("foo"))
+  isFalse(Recoil.DefaultValue.isDefaultValue())
+  isFalse(Recoil.DefaultValue.isDefaultValue(Js.Null.empty))
+  isFalse(Recoil.DefaultValue.isDefaultValue(Js.Undefined.empty))
+})
