@@ -480,6 +480,50 @@ testWithReact("Recoil.atomWithEffects can run effects", container => {
   isTrue(value->Option.isSome)
 })
 
+module UseRecoilAtomWithEffectFromRecoilValueConfig = {
+  let atom = Recoil.atom({key: "Atom", default: 0})
+
+  @react.component
+  let make = () => {
+    let (atomWithEffectValue, setAtomWithEffectValue) = React.useState(_ => 0)
+    let atomWithEffect = React.useMemo1(() =>
+      Recoil.atomWithEffectsFromRecoilValue({
+        key: "AtomWithEffectFromRecoilValue",
+        default: atom,
+        effects_UNSTABLE: [
+          ({onSet}) => {
+            onSet((~newValue, ~oldValue as _, ~isReset as _) => {
+              setAtomWithEffectValue(_ => newValue)
+            })
+            None
+          },
+        ],
+      })
+    , [setAtomWithEffectValue])
+    let setAtomWithEffect = Recoil.useSetRecoilState(atomWithEffect)
+
+    React.useEffect1(() => {
+      setAtomWithEffect(_ => 1)
+      None
+    }, [setAtomWithEffect])
+
+    <strong>{(atomWithEffectValue == 1 ? "OK" : "NOK")->React.string}</strong>
+  }
+}
+
+testWithReact("Recoil.atomWithEffectsFromRecoilValueConfig", container => {
+  act(() =>
+    ReactDOM.render(
+      <Recoil.RecoilRoot> <UseRecoilAtomWithEffectFromRecoilValueConfig /> </Recoil.RecoilRoot>,
+      container,
+    )
+  )
+
+  let value = container->DOM.findBySelectorAndTextContent("strong", "OK")
+
+  isTrue(value->Option.isSome)
+})
+
 @module("recoil") @new
 external makeDefaultValue: unit => 'a = "DefaultValue"
 
