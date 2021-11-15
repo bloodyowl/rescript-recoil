@@ -34,6 +34,12 @@ type atomWithEffectsConfig<'value> = {
   effects_UNSTABLE: array<atomEffect<'value> => option<unit => unit>>,
 }
 
+type atomWithEffectsFromRecoilValueConfig<'value, 'mode> = {
+  key: string,
+  default: t<'value, 'mode>,
+  effects_UNSTABLE: array<atomEffect<'value> => option<unit => unit>>,
+}
+
 type atomWithDangerouslyAllowMutabilityConfig<'value> = {
   key: string,
   default: 'value,
@@ -74,8 +80,10 @@ external asyncAtomWithEffects: atomWithEffectsConfig<'value> => readWrite<'value
 external atomFromRecoilValue: atomConfig<t<'value, _>> => readWrite<'value> = "atom"
 
 @module("recoil")
-external atomWithEffectsFromRecoilValue: atomWithEffectsConfig<t<'value, _>> => readWrite<'value> =
-  "atom"
+external atomWithEffectsFromRecoilValue: atomWithEffectsFromRecoilValueConfig<
+  'value,
+  _,
+> => readWrite<'value> = "atom"
 
 @module("recoil")
 external atomFamily: atomFamilyConfig<'parameter, 'value> => atomFamily<
