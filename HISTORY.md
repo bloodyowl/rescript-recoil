@@ -1,3 +1,14 @@
+## 3.0.0
+
+Breaking Changes:
+
+- Add `isReset` parameter to effect onSet callback ([https://github.com/barodeur](@barodeur)) (e35223f)
+- Fix type signature for atom with effects ([https://github.com/barodeur](@barodeur)) (a74ac31)
+
+Features:
+
+- Add `DefaultValue` handler (f949f04)
+
 ## 2.1.1
 
 Fixes:
