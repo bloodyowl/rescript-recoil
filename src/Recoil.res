@@ -8,4 +8,6 @@ include Recoil__React
 
 module Loadable = Recoil__Loadable
 
+module DefaultValue = Recoil__DefaultValue
+
 include Recoil__Helpers

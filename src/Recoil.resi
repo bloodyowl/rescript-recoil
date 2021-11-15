@@ -64,7 +64,6 @@ external atomWithDangerouslyAllowMutability: atomWithDangerouslyAllowMutabilityC
   'value,
 > => readWrite<'value> = "atom"
 
-
 @module("recoil")
 external asyncAtom: atomConfig<Js.Promise.t<'value>> => readWrite<'value> = "atom"
 
@@ -518,3 +517,8 @@ external waitForNone6: (
 
 @module("recoil")
 external noWait: t<'value, 'mode> => readOnly<Loadable.t<'value>> = "noWait"
+
+module DefaultValue: {
+  @module("recoil") @scope(("DefaultValue", "prototype"))
+  external isDefaultValue: 'a => bool = "isPrototypeOf"
+}
