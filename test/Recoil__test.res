@@ -481,33 +481,39 @@ testWithReact("Recoil.atomWithEffects can run effects", container => {
 })
 
 module UseRecoilAtomWithEffectFromRecoilValueConfig = {
+  // The callback value is later set to a React.useState setter.
+  let callback = ref(None)
+
   let atom = Recoil.atom({key: "Atom", default: 0})
+  let atomWithEffect = Recoil.atomWithEffectsFromRecoilValue({
+    key: "AtomWithEffectFromRecoilValue",
+    default: atom,
+    effects_UNSTABLE: [
+      ({onSet}) => {
+        onSet((~newValue, ~oldValue as _, ~isReset as _) => {
+          callback.contents->Belt.Option.map(cb => cb(newValue))->ignore
+        })
+        None
+      },
+    ],
+  })
 
   @react.component
   let make = () => {
     let (atomWithEffectValue, setAtomWithEffectValue) = React.useState(_ => 0)
-    let atomWithEffect = React.useMemo1(() =>
-      Recoil.atomWithEffectsFromRecoilValue({
-        key: "AtomWithEffectFromRecoilValue",
-        default: atom,
-        effects_UNSTABLE: [
-          ({onSet}) => {
-            onSet((~newValue, ~oldValue as _, ~isReset as _) => {
-              setAtomWithEffectValue(_ => newValue)
-            })
-            None
-          },
-        ],
-      })
-    , [setAtomWithEffectValue])
     let setAtomWithEffect = Recoil.useSetRecoilState(atomWithEffect)
+
+    React.useEffect1(() => {
+      callback.contents = Some(newValue => setAtomWithEffectValue(_ => newValue))
+      None
+    }, [setAtomWithEffectValue])
 
     React.useEffect1(() => {
       setAtomWithEffect(_ => 1)
       None
     }, [setAtomWithEffect])
 
-    <strong>{(atomWithEffectValue == 1 ? "OK" : "NOK")->React.string}</strong>
+    <strong> {(atomWithEffectValue == 1 ? "OK" : "NOK")->React.string} </strong>
   }
 }
 
