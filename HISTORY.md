@@ -1,3 +1,9 @@
+## 3.1.0
+
+Changes:
+
+- Allow React 17 (00ed643)
+
 ## 3.0.0
 
 Breaking Changes:
