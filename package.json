@@ -1,6 +1,6 @@
 {
   "name": "rescript-recoil",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Zero-cost bindings to Facebook's Recoil library",
   "scripts": {
     "build": "rescript",
