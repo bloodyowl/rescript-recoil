@@ -52,10 +52,10 @@ let todoListStatsState = Recoil.selector({
       totalNum === 0 ? 0.0 : totalCompletedNum->Float.fromInt /. totalNum->Float.fromInt
 
     {
-      totalNum: totalNum,
-      totalCompletedNum: totalCompletedNum,
-      totalUncompletedNum: totalUncompletedNum,
-      percentCompleted: percentCompleted,
+      totalNum,
+      totalCompletedNum,
+      totalUncompletedNum,
+      percentCompleted,
     }
   },
 })
@@ -181,19 +181,19 @@ module TodoListStats = {
   @react.component
   let make = () => {
     let {
-      totalNum,
-      totalCompletedNum,
-      totalUncompletedNum,
+      totalNum: _,
+      totalCompletedNum: _,
+      totalUncompletedNum: _,
       percentCompleted,
     } = Recoil.useRecoilValue(todoListStatsState)
 
-    let formattedPercentCompleted = Js.Math.round(percentCompleted *. 100.0)
+    let _formattedPercentCompleted = Js.Math.round(percentCompleted *. 100.0)
 
     <ul>
-      <li> {j`Total items: $totalNum`->React.string} </li>
-      <li> {j`Items completed: $totalCompletedNum`->React.string} </li>
-      <li> {j`Items not completed: $totalUncompletedNum`->React.string} </li>
-      <li> {j`Percent completed: $(formattedPercentCompleted)%`->React.string} </li>
+      <li> {`Total items: $totalNum`->React.string} </li>
+      <li> {`Items completed: $totalCompletedNum`->React.string} </li>
+      <li> {`Items not completed: $totalUncompletedNum`->React.string} </li>
+      <li> {`Percent completed: $(formattedPercentCompleted)%`->React.string} </li>
     </ul>
   }
 }
@@ -207,13 +207,21 @@ module TodoList = {
       <TodoListFilters />
       <TodoItemCreator />
       {todoList
-      ->Array.map(({id} as todoItem) => <TodoItem item=todoItem key=j`$id` />)
+      ->Array.map(({id: _} as todoItem) => <TodoItem item=todoItem key={`$id`} />)
       ->React.array}
     </>
   }
 }
 
 switch ReactDOM.querySelector("#root") {
-| Some(root) => ReactDOM.render(<Recoil.RecoilRoot> <TodoList /> </Recoil.RecoilRoot>, root)
+| Some(container) => {
+    let rootElement = ReactDOM.Client.createRoot(container)
+    ReactDOM.Client.Root.render(
+      rootElement,
+      <Recoil.RecoilRoot>
+        <TodoList />
+      </Recoil.RecoilRoot>,
+    )
+  }
 | None => ()
 }

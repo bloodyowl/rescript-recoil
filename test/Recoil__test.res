@@ -1,4 +1,4 @@
-open Belt
+open RescriptCore
 open Test
 
 let isTrue = (~message=?, value) => assertion(~message?, (a, b) => a === b, value, true)
@@ -43,7 +43,9 @@ module OtherUseRecoilStateComponent = {
   let make = () => {
     let (atom3, _setAtom3) = Recoil.useRecoilState(atom3)
 
-    <div> <i> {atom3->React.int} </i> </div>
+    <div>
+      <i> {atom3->React.int} </i>
+    </div>
   }
 }
 
@@ -51,36 +53,44 @@ module OtherUseRecoilStateComponent = {
 @send external remove: Dom.element => unit = "remove"
 
 let createContainer = () => {
-  let containerElement: Dom.element = window["document"]["createElement"](. "div")
-  let _ = window["document"]["body"]["appendChild"](. containerElement)
-  containerElement
+  let domElement: Dom.element = window["document"]["createElement"]("div")
+  let containerElement = ReactDOM.Client.createRoot(domElement)
+
+  let _ = window["document"]["body"]["appendChild"](domElement)
+  (containerElement, domElement)
 }
 
-let cleanupContainer = container => {
-  ReactDOM.unmountComponentAtNode(container)
-  remove(container)
+let cleanupContainer = ((container, domElement)) => {
+  ReactDOM.Client.Root.unmount(container, ())
+  remove(domElement)
 }
 
-let testWithReact = testWith(~setup=createContainer, ~teardown=cleanupContainer)
-let testAsyncWithReact = testAsyncWith(~setup=createContainer, ~teardown=cleanupContainer)
+let testWithReact = (descr: string, testFn: ((ReactDOM.Client.Root.t, Dom.element)) => unit) =>
+  testWith(~setup=createContainer, ~teardown=cleanupContainer, descr, testFn)
 
-testWithReact("Recoil.useRecoilState: Can read and set value", container => {
-  act(() =>
-    ReactDOM.render(
-      <Recoil.RecoilRoot>
-        <UseRecoilStateComponent /> <OtherUseRecoilStateComponent />
-      </Recoil.RecoilRoot>,
-      container,
-    )
-  )
+let testAsyncWithReact = (
+  descr: string,
+  testFn: ((ReactDOM.Client.Root.t, Dom.element), (~planned: int=?, unit) => unit) => unit,
+) => testAsyncWith(~setup=createContainer, ~teardown=cleanupContainer, descr, testFn)
 
-  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+let render = ReactDOM.Client.Root.render
+
+testWithReact("Recoil.useRecoilState: Can read and set value", ((container, domElement)) => {
+  let element =
+    <Recoil.RecoilRoot>
+      <UseRecoilStateComponent />
+      <OtherUseRecoilStateComponent />
+    </Recoil.RecoilRoot>
+
+  act(() => render(container, element))
+
+  let atomValue = domElement->DOM.findBySelectorAndTextContent("strong", "0")
   isTrue(atomValue->Option.isSome)
 
-  let otherAtomValue = container->DOM.findBySelectorAndTextContent("i", "0")
+  let otherAtomValue = domElement->DOM.findBySelectorAndTextContent("i", "0")
   isTrue(otherAtomValue->Option.isSome)
 
-  let button = container->DOM.findBySelectorAndTextContent("button", "Increment")
+  let button = domElement->DOM.findBySelectorAndTextContent("button", "Increment")
 
   act(() =>
     switch button {
@@ -89,16 +99,16 @@ testWithReact("Recoil.useRecoilState: Can read and set value", container => {
     }
   )
 
-  let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let previousAtomValue = domElement->DOM.findBySelectorAndTextContent("strong", "0")
   isFalse(previousAtomValue->Option.isSome)
 
-  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
+  let atomValue = domElement->DOM.findBySelectorAndTextContent("strong", "1")
   isTrue(atomValue->Option.isSome)
 
-  let previousOtherAtomValue = container->DOM.findBySelectorAndTextContent("i", "0")
+  let previousOtherAtomValue = domElement->DOM.findBySelectorAndTextContent("i", "0")
   isFalse(previousOtherAtomValue->Option.isSome)
 
-  let otherAtomValue = container->DOM.findBySelectorAndTextContent("i", "1")
+  let otherAtomValue = domElement->DOM.findBySelectorAndTextContent("i", "1")
   isTrue(otherAtomValue->Option.isSome)
 })
 
@@ -109,7 +119,9 @@ module UseRecoilValueComponent = {
   let make = () => {
     let atom4 = Recoil.useRecoilValue(atom4)
 
-    <div> <strong> {atom4->React.int} </strong> </div>
+    <div>
+      <strong> {atom4->React.int} </strong>
+    </div>
   }
 }
 
@@ -126,21 +138,23 @@ module UseSetRecoilStateComponent = {
   }
 }
 
-testWithReact("Recoil.useRecoilValue/useSetRecoilState can read and set value", container => {
-  act(() =>
-    ReactDOM.render(
-      <Recoil.RecoilRoot>
-        <UseRecoilValueComponent /> <UseSetRecoilStateComponent />
-      </Recoil.RecoilRoot>,
-      container,
-    )
-  )
+testWithReact("Recoil.useRecoilValue/useSetRecoilState can read and set value", ((
+  container,
+  domElement,
+)) => {
+  let element =
+    <Recoil.RecoilRoot>
+      <UseRecoilValueComponent />
+      <UseSetRecoilStateComponent />
+    </Recoil.RecoilRoot>
 
-  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  act(() => render(container, element))
+
+  let atomValue = domElement->DOM.findBySelectorAndTextContent("strong", "0")
 
   isTrue(atomValue->Option.isSome)
 
-  let button = container->DOM.findBySelectorAndTextContent("button", "Increment")
+  let button = domElement->DOM.findBySelectorAndTextContent("button", "Increment")
 
   act(() =>
     switch button {
@@ -149,15 +163,15 @@ testWithReact("Recoil.useRecoilValue/useSetRecoilState can read and set value", 
     }
   )
 
-  let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let previousAtomValue = domElement->DOM.findBySelectorAndTextContent("strong", "0")
 
   isFalse(previousAtomValue->Option.isSome)
 
-  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
+  let atomValue = domElement->DOM.findBySelectorAndTextContent("strong", "1")
 
   isTrue(atomValue->Option.isSome)
 
-  let button = container->DOM.findBySelectorAndTextContent("button", "Reset")
+  let button = domElement->DOM.findBySelectorAndTextContent("button", "Reset")
 
   act(() =>
     switch button {
@@ -166,32 +180,30 @@ testWithReact("Recoil.useRecoilValue/useSetRecoilState can read and set value", 
     }
   )
 
-  let previousAtomValue = container->DOM.findBySelectorAndTextContent("strong", "1")
+  let previousAtomValue = domElement->DOM.findBySelectorAndTextContent("strong", "1")
 
   isFalse(previousAtomValue->Option.isSome)
 
-  let atomValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let atomValue = domElement->DOM.findBySelectorAndTextContent("strong", "0")
 
   isTrue(atomValue->Option.isSome)
 })
 
-testWithReact(
-  "Recoil.useRecoilValue/useSetRecoilState can take a default store value",
-  container => {
-    act(() =>
-      ReactDOM.render(
-        <Recoil.RecoilRoot initializeState={({set}) => set(atom4, 60)}>
-          <UseRecoilValueComponent />
-        </Recoil.RecoilRoot>,
-        container,
-      )
-    )
+testWithReact("Recoil.useRecoilValue/useSetRecoilState can take a default store value", ((
+  container,
+  domElement,
+)) => {
+  let element =
+    <Recoil.RecoilRoot initializeState={({set}) => set(atom4, 60)}>
+      <UseRecoilValueComponent />
+    </Recoil.RecoilRoot>
 
-    let atomValue = container->DOM.findBySelectorAndTextContent("strong", "60")
+  act(() => render(container, element))
 
-    isTrue(atomValue->Option.isSome)
-  },
-)
+  let atomValue = domElement->DOM.findBySelectorAndTextContent("strong", "60")
+
+  isTrue(atomValue->Option.isSome)
+})
 
 let username = Recoil.atom({key: "Test.Username", default: ""})
 let usernameSize = Recoil.selectorWithWrite({
@@ -236,19 +248,22 @@ external domElementToJsT: Dom.element => {..} = "%identity"
 
 // The following test outputs a warning, but that doesn't look like
 // to be related to our bindings: https://github.com/facebookexperimental/Recoil/issues/31
-testWithReact("Recoil.useRecoilState with selector Can read and set value", container => {
-  act(() =>
-    ReactDOM.render(
-      <Recoil.RecoilRoot> <UseRecoilStateComponentWithSelector /> </Recoil.RecoilRoot>,
-      container,
-    )
-  )
+testWithReact("Recoil.useRecoilState with selector Can read and set value", ((
+  container,
+  domElement,
+)) => {
+  let element =
+    <Recoil.RecoilRoot>
+      <UseRecoilStateComponentWithSelector />
+    </Recoil.RecoilRoot>
 
-  let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  act(() => render(container, element))
+
+  let selectorValue = domElement->DOM.findBySelectorAndTextContent("strong", "0")
 
   isTrue(selectorValue->Option.isSome)
 
-  let input = container->DOM.findBySelector("input")
+  let input = domElement->DOM.findBySelector("input")
 
   act(() =>
     switch input {
@@ -257,15 +272,15 @@ testWithReact("Recoil.useRecoilState with selector Can read and set value", cont
     }
   )
 
-  let oldSelectorValue = container->DOM.findBySelectorAndTextContent("strong", "0")
+  let oldSelectorValue = domElement->DOM.findBySelectorAndTextContent("strong", "0")
 
   isFalse(oldSelectorValue->Option.isSome)
 
-  let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "9")
+  let selectorValue = domElement->DOM.findBySelectorAndTextContent("strong", "9")
 
   isTrue(selectorValue->Option.isSome)
 
-  let button = container->DOM.findBySelectorAndTextContent("button", "Slice to 1")
+  let button = domElement->DOM.findBySelectorAndTextContent("button", "Slice to 1")
 
   act(() =>
     switch button {
@@ -274,18 +289,18 @@ testWithReact("Recoil.useRecoilState with selector Can read and set value", cont
     }
   )
 
-  let oldSelectorValue = container->DOM.findBySelectorAndTextContent("strong", "9")
+  let oldSelectorValue = domElement->DOM.findBySelectorAndTextContent("strong", "9")
 
   isFalse(oldSelectorValue->Option.isSome)
 
-  let selectorValue = container->DOM.findBySelectorAndTextContent("strong", "1")
+  let selectorValue = domElement->DOM.findBySelectorAndTextContent("strong", "1")
 
   isTrue(selectorValue->Option.isSome)
 
-  let input = container->DOM.findBySelector("input")
+  let input = domElement->DOM.findBySelector("input")
 
   assertion(
-    (a, b) => Option.eq(a, b, (a, b) => a == b),
+    (a, b) => Option.equal(a, b, (a, b) => a == b),
     input->Option.map(item => (item->domElementToJsT)["value"]),
     Some("b"),
   )
@@ -296,33 +311,39 @@ let atomForCallback = Recoil.atom({key: "atomForCallback", default: "HelloWorld"
 module UseRecoilCallbackComponent = {
   @react.component
   let make = (~onCallback) => {
-    let onClick = Recoil.useRecoilCallback0(({snapshot: {getPromise}}, _) => {
-      let _ = getPromise(atomForCallback)->Js.Promise.then_(value => {
-        onCallback(value)
-        Js.Promise.resolve()
-      }, _)
+    let onClick = Recoil.useRecoilCallback0(({snapshot: {getPromise}}) => {
+      _event =>
+        getPromise(atomForCallback)
+        ->Promise.then(value => {
+          onCallback(value)
+          Promise.resolve()
+        })
+        ->ignore
     })
 
-    <div> <button onClick> {"Run callback"->React.string} </button> </div>
+    <div>
+      <button onClick> {"Run callback"->React.string} </button>
+    </div>
   }
 }
 
-testAsyncWithReact("Recoil.useRecoilCallback Can read and set value", (container, callback) => {
-  act(() =>
-    ReactDOM.render(
-      <Recoil.RecoilRoot>
-        <UseRecoilCallbackComponent
-          onCallback={value => {
-            stringEqual(value, "HelloWorld")
-            callback()
-          }}
-        />
-      </Recoil.RecoilRoot>,
-      container,
-    )
-  )
+testAsyncWithReact("Recoil.useRecoilCallback Can read and set value", (
+  (container, domElement),
+  callback,
+) => {
+  let element =
+    <Recoil.RecoilRoot>
+      <UseRecoilCallbackComponent
+        onCallback={value => {
+          stringEqual(value, "HelloWorld")
+          callback()
+        }}
+      />
+    </Recoil.RecoilRoot>
 
-  let button = container->DOM.findBySelectorAndTextContent("button", "Run callback")
+  act(() => render(container, element))
+
+  let button = domElement->DOM.findBySelectorAndTextContent("button", "Run callback")
 
   act(() =>
     switch button {
@@ -340,37 +361,39 @@ let atomForUncurriedCallback = Recoil.atom({
 module UseUncurriedRecoilCallbackComponent = {
   @react.component
   let make = (~onCallback) => {
-    let onClick = Recoil.Uncurried.useRecoilCallback0(({snapshot: {getPromise}}, _) => {
-      getPromise(atomForUncurriedCallback)->Js.Promise.then_(value => {
-        onCallback(value)
-        Js.Promise.resolve()
-      }, _)->ignore
-      ()
+    let onClick = Recoil.Uncurried.useRecoilCallback0(({snapshot: {getPromise}}) => {
+      _event =>
+        getPromise(atomForUncurriedCallback)
+        ->Promise.then(value => {
+          onCallback(value)
+          Promise.resolve()
+        })
+        ->ignore
     })
 
-    <div> <button onClick={e => onClick(. e)}> {"Run callback"->React.string} </button> </div>
+    <div>
+      <button onClick={e => onClick(e)}> {"Run callback"->React.string} </button>
+    </div>
   }
 }
 
 testAsyncWithReact("Recoil.Uncurried.useRecoilCallback can read and set value", (
-  container,
+  (container, domElement),
   callback,
 ) => {
-  act(() =>
-    ReactDOM.render(
-      <Recoil.RecoilRoot>
-        <UseUncurriedRecoilCallbackComponent
-          onCallback={value => {
-            stringEqual(value, "HelloWorldUncurried")
-            callback()
-          }}
-        />
-      </Recoil.RecoilRoot>,
-      container,
-    )
-  )
+  let element =
+    <Recoil.RecoilRoot>
+      <UseUncurriedRecoilCallbackComponent
+        onCallback={value => {
+          stringEqual(value, "HelloWorldUncurried")
+          callback()
+        }}
+      />
+    </Recoil.RecoilRoot>
 
-  let button = container->DOM.findBySelectorAndTextContent("button", "Run callback")
+  act(() => render(container, element))
+
+  let button = domElement->DOM.findBySelectorAndTextContent("button", "Run callback")
 
   act(() =>
     switch button {
@@ -408,17 +431,16 @@ module UseRecoilAtomSelectorComponent = {
   }
 }
 
-testWithReact("Recoil.atomFamily/selectorFamily can read value", container => {
-  act(() =>
-    ReactDOM.render(
-      <Recoil.RecoilRoot> <UseRecoilAtomSelectorComponent /> </Recoil.RecoilRoot>,
-      container,
-    )
-  )
+testWithReact("Recoil.atomFamily/selectorFamily can read value", ((container, domElement)) => {
+  let element =
+    <Recoil.RecoilRoot>
+      <UseRecoilAtomSelectorComponent />
+    </Recoil.RecoilRoot>
+  act(() => render(container, element))
 
-  let id = container->DOM.findBySelectorAndTextContent("strong", "A")
-  let username = container->DOM.findBySelectorAndTextContent("span", "User:A")
-  let selector = container->DOM.findBySelectorAndTextContent("i", "User:A:Ok")
+  let id = domElement->DOM.findBySelectorAndTextContent("strong", "A")
+  let username = domElement->DOM.findBySelectorAndTextContent("span", "User:A")
+  let selector = domElement->DOM.findBySelectorAndTextContent("i", "User:A:Ok")
 
   isTrue(id->Option.isSome)
   isTrue(username->Option.isSome)
@@ -432,16 +454,21 @@ module UseRecoilWaitForAll = {
   let make = () => {
     let (hello, world) = Recoil.useRecoilValue(Recoil.waitForAll2((atomWait1, atomWait2)))
 
-    <div> <strong> {(hello ++ world)->React.string} </strong> </div>
+    <div>
+      <strong> {(hello ++ world)->React.string} </strong>
+    </div>
   }
 }
 
-testWithReact("Recoil.waitForAll can read value", container => {
-  act(() =>
-    ReactDOM.render(<Recoil.RecoilRoot> <UseRecoilWaitForAll /> </Recoil.RecoilRoot>, container)
-  )
+testWithReact("Recoil.waitForAll can read value", ((container, domElement)) => {
+  let element =
+    <Recoil.RecoilRoot>
+      <UseRecoilWaitForAll />
+    </Recoil.RecoilRoot>
 
-  let value = container->DOM.findBySelectorAndTextContent("strong", "HelloWorld")
+  act(() => render(container, element))
+
+  let value = domElement->DOM.findBySelectorAndTextContent("strong", "HelloWorld")
 
   isTrue(value->Option.isSome)
 })
@@ -463,19 +490,21 @@ module UseRecoilStateWithEffectComponent = {
   @react.component
   let make = () => {
     let atomWithEffect = Recoil.useRecoilValue(atomWithEffect)
-    <div> <strong> {atomWithEffect->React.int} </strong> </div>
+    <div>
+      <strong> {atomWithEffect->React.int} </strong>
+    </div>
   }
 }
 
-testWithReact("Recoil.atomWithEffects can run effects", container => {
-  act(() =>
-    ReactDOM.render(
-      <Recoil.RecoilRoot> <UseRecoilStateWithEffectComponent /> </Recoil.RecoilRoot>,
-      container,
-    )
-  )
+testWithReact("Recoil.atomWithEffects can run effects", ((container, domElement)) => {
+  let element =
+    <Recoil.RecoilRoot>
+      <UseRecoilStateWithEffectComponent />
+    </Recoil.RecoilRoot>
 
-  let value = container->DOM.findBySelectorAndTextContent("strong", "1")
+  act(() => render(container, element))
+
+  let value = domElement->DOM.findBySelectorAndTextContent("strong", "1")
 
   isTrue(value->Option.isSome)
 })

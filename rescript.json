@@ -1,0 +1,41 @@
+{
+  "name": "rescript-recoil",
+  "version": "3.1.0",
+  "jsx": {
+    "version": 4,
+    "module": "react"
+  },
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    {
+      "dir": "test",
+      "subdirs": true,
+      "type": "dev"
+    },
+    {
+      "dir": "examples",
+      "subdirs": true,
+      "type": "dev"
+    }
+  ],
+  "package-specs": [
+    {
+      "module": "commonjs",
+      "in-source": true,
+      "suffix": ".bs.js"
+    }
+  ],
+  "bs-dependencies": [
+    "@rescript/react",
+    "@rescript/core"
+  ],
+  "bs-dev-dependencies": [
+    "rescript-test"
+  ],
+  "warnings": {
+    "error": "+101"
+  }
+}
