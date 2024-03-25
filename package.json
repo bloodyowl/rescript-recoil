@@ -21,18 +21,19 @@
   "author": "bloodyowl <bloodyowl@icloud.com>",
   "license": "MIT",
   "devDependencies": {
-    "@rescript/react": "^0.10.1",
+    "@rescript/react": "^0.12.1",
+    "@rescript/core": "^1.1.0",
     "moduleserve": "^0.9.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "recoil": "0.1.2",
-    "rescript": "^9.1.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recoil": "0.7.7",
+    "rescript": "^11.0.1",
     "rescript-test": "^3.0.0"
   },
   "peerDependencies": {
-    "@rescript/react": "^0.10.1",
+    "@rescript/react": "^0.12.1",
     "react": ">=16.13.1",
     "react-dom": ">=16.13.1",
-    "recoil": ">=0.1.1"
+    "recoil": ">=0.7.7"
   }
 }

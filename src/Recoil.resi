@@ -71,7 +71,7 @@ external atomWithDangerouslyAllowMutability: atomWithDangerouslyAllowMutabilityC
 > => readWrite<'value> = "atom"
 
 @module("recoil")
-external asyncAtom: atomConfig<Js.Promise.t<'value>> => readWrite<'value> = "atom"
+external asyncAtom: atomConfig<promise<'value>> => readWrite<'value> = "atom"
 
 @module("recoil")
 external asyncAtomWithEffects: atomWithEffectsConfig<'value> => readWrite<'value> = "atom"
@@ -92,7 +92,7 @@ external atomFamily: atomFamilyConfig<'parameter, 'value> => atomFamily<
 > = "atomFamily"
 
 @module("recoil")
-external asyncAtomFamily: atomFamilyConfig<'parameter, Js.Promise.t<'value>> => atomFamily<
+external asyncAtomFamily: atomFamilyConfig<'parameter, promise<'value>> => atomFamily<
   'parameter,
   readWrite<'value>,
 > = "atomFamily"
@@ -112,7 +112,7 @@ external atomFamilyWithEffects: atomFamilyWithEffectsConfig<'parameter, 'value> 
 @module("recoil")
 external asyncAtomFamilyWithEffects: atomFamilyWithEffectsConfig<
   'parameter,
-  Js.Promise.t<'value>,
+  promise<'value>,
 > => atomFamily<'parameter, readWrite<'value>> = "atomFamily"
 
 @module("recoil")
@@ -151,7 +151,7 @@ type fn<'a> = Fn('a)
 
 type asyncSelectorConfig<'value> = {
   key: string,
-  get: getValue<Js.Promise.t<'value>>,
+  get: getValue<promise<'value>>,
 }
 
 type selectorConfigFromRecoilValue<'value, 'mode> = {
@@ -172,12 +172,12 @@ type selectorFamilyWithWriteConfig<'parameter, 'value> = {
 
 type asyncSelectorFamilyConfig<'parameter, 'value> = {
   key: string,
-  get: 'parameter => fn<getValue<Js.Promise.t<'value>>>,
+  get: 'parameter => fn<getValue<promise<'value>>>,
 }
 
 type asyncSelectorFamilyWithWriteConfig<'parameter, 'value> = {
   key: string,
-  get: 'parameter => fn<getValue<Js.Promise.t<'value>>>,
+  get: 'parameter => fn<getValue<promise<'value>>>,
   set: 'parameter => fn<setValue<'value>>,
 }
 
@@ -256,7 +256,7 @@ module Loadable: {
 
   @send external getValue: t<'value> => 'value = "getValue"
   @send
-  external toPromise: t<'value> => Js.Promise.t<'value> = "toPromise"
+  external toPromise: t<'value> => promise<'value> = "toPromise"
 
   @send @return(undefined_to_opt)
   external valueMaybe: t<'value> => option<'value> = "valueMaybe"
@@ -266,13 +266,13 @@ module Loadable: {
   @send external errorOrThrow: t<'value> => 'error = "errorOrThrow"
 
   @send @return(undefined_to_opt)
-  external promiseMaybe: t<'value> => option<Js.Promise.t<'value>> = "promiseMaybe"
+  external promiseMaybe: t<'value> => option<promise<'value>> = "promiseMaybe"
   @send
-  external promiseOrThrow: t<'value> => Js.Promise.t<'value> = "promiseOrThrow"
+  external promiseOrThrow: t<'value> => promise<'value> = "promiseOrThrow"
 
   @send external map: (t<'value>, 'value => 'b) => t<'b> = "map"
   @send
-  external mapAsync: (t<'value>, 'value => Js.Promise.t<'b>) => t<'b> = "map"
+  external mapAsync: (t<'value>, 'value => promise<'b>) => t<'b> = "map"
 }
 
 // Hooks
@@ -319,86 +319,86 @@ type callback<'additionalArg, 'returnValue> = 'additionalArg => 'returnValue
 
 @module("recoil")
 external useRecoilCallback: (
-  @uncurry (callbackParam => callback<'additionalArg, 'returnValue>)
+  @uncurry callbackParam => callback<'additionalArg, 'returnValue>
 ) => callback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
 @module("recoil")
 external useRecoilCallback0: (
-  @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+  @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
   @as(json`[]`) _,
 ) => callback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
 @module("recoil")
 external useRecoilCallback1: (
-  @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+  @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
   array<'a>,
 ) => callback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
 @module("recoil")
 external useRecoilCallback2: (
-  @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+  @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
   ('a, 'b),
 ) => callback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
 @module("recoil")
 external useRecoilCallback3: (
-  @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+  @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
   ('a, 'b, 'c),
 ) => callback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
 @module("recoil")
 external useRecoilCallback4: (
-  @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+  @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
   ('a, 'b, 'c, 'd),
 ) => callback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
 @module("recoil")
 external useRecoilCallback5: (
-  @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+  @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
   ('a, 'b, 'c, 'd, 'e),
 ) => callback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
 module Uncurried: {
-  type uncurriedCallback<'additionalArg, 'returnValue> = (. 'additionalArg) => 'returnValue
+  type uncurriedCallback<'additionalArg, 'returnValue> = 'additionalArg => 'returnValue
 
   @module("recoil")
   external useRecoilCallback: (
-    @uncurry (callbackParam => callback<'additionalArg, 'returnValue>)
+    @uncurry callbackParam => callback<'additionalArg, 'returnValue>
   ) => uncurriedCallback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
   @module("recoil")
   external useRecoilCallback0: (
-    @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+    @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
     @as(json`[]`) _,
   ) => uncurriedCallback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
   @module("recoil")
   external useRecoilCallback1: (
-    @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+    @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
     array<'a>,
   ) => uncurriedCallback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
   @module("recoil")
   external useRecoilCallback2: (
-    @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+    @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
     ('a, 'b),
   ) => uncurriedCallback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
   @module("recoil")
   external useRecoilCallback3: (
-    @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+    @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
     ('a, 'b, 'c),
   ) => uncurriedCallback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
   @module("recoil")
   external useRecoilCallback4: (
-    @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+    @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
     ('a, 'b, 'c, 'd),
   ) => uncurriedCallback<'additionalArg, 'returnValue> = "useRecoilCallback"
 
   @module("recoil")
   external useRecoilCallback5: (
-    @uncurry (callbackParam => callback<'additionalArg, 'returnValue>),
+    @uncurry callbackParam => callback<'additionalArg, 'returnValue>,
     ('a, 'b, 'c, 'd, 'e),
   ) => uncurriedCallback<'additionalArg, 'returnValue> = "useRecoilCallback"
 }

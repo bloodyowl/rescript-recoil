@@ -9,14 +9,14 @@ type user = {
 let getUserMock = (~id) =>
   Js.Promise.make((~resolve, ~reject as _) =>
     switch id {
-    | "" => resolve(. None)
+    | "" => resolve(None)
     | _ =>
       let _ = Js.Global.setTimeout(() =>
-        resolve(.
+        resolve(
           Some({
-            id: id,
+            id,
             username: "User " ++ id,
-            avatar: j`https://avatars.githubusercontent.com/$id?size=64`, //avatars.githubusercontent.com/$id?size=64|j},
+            avatar: `https://avatars.githubusercontent.com/$id?size=64`, //avatars.githubusercontent.com/$id?size=64|j},
           }),
         )
       , 1_000)
@@ -85,11 +85,21 @@ module App = {
   @react.component
   let make = () => <>
     <UserIdPicker />
-    <React.Suspense fallback={"Loading ..."->React.string}> <UserCard /> </React.Suspense>
+    <React.Suspense fallback={"Loading ..."->React.string}>
+      <UserCard />
+    </React.Suspense>
   </>
 }
 
 switch ReactDOM.querySelector("#root") {
-| Some(root) => ReactDOM.render(<Recoil.RecoilRoot> <App /> </Recoil.RecoilRoot>, root)
+| Some(container) => {
+    let root = ReactDOM.Client.createRoot(container)
+    ReactDOM.Client.Root.render(
+      root,
+      <Recoil.RecoilRoot>
+        <App />
+      </Recoil.RecoilRoot>,
+    )
+  }
 | None => ()
 }

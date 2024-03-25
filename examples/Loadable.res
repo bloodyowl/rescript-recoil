@@ -9,10 +9,10 @@ type user = {
 let getUserMock = (~id) =>
   Js.Promise.make((~resolve, ~reject as _) => {
     let _ = Js.Global.setTimeout(() =>
-      resolve(. {
-        id: id,
+      resolve({
+        id,
         username: "User " ++ id,
-        avatar: j`https://avatars.githubusercontent.com/$id?size=64`, //avatars.githubusercontent.com/$id?size=64|j},
+        avatar: `https://avatars.githubusercontent.com/$id?size=64`, //avatars.githubusercontent.com/$id?size=64|j},
       })
     , 1000)
   })
@@ -69,14 +69,11 @@ module UserCard = {
          * It's actually not needed since data will be fetched
          * when component gets mounted.
          ")
-      (
-        Recoil.Loadable.toPromise(userLoadable)
-        |> Js.Promise.then_(user => {
+      ignore(Js.Promise.then_(user => {
           Js.log(user)
           Js.Promise.resolve()
-        })
-        |> ignore
-      )
+        }, Recoil.Loadable.toPromise(userLoadable)))
+
       None
     }, [userLoadable])
 
@@ -96,10 +93,21 @@ module UserCard = {
 
 module App = {
   @react.component
-  let make = () => <> <UserIdPicker /> <UserCard /> </>
+  let make = () => <>
+    <UserIdPicker />
+    <UserCard />
+  </>
 }
 
 switch ReactDOM.querySelector("#root") {
-| Some(root) => ReactDOM.render(<Recoil.RecoilRoot> <App /> </Recoil.RecoilRoot>, root)
+| Some(container) => {
+    let rootElement = ReactDOM.Client.createRoot(container)
+    ReactDOM.Client.Root.render(
+      rootElement,
+      <Recoil.RecoilRoot>
+        <App />
+      </Recoil.RecoilRoot>,
+    )
+  }
 | None => ()
 }
